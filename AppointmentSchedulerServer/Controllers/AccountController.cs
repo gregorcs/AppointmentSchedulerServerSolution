@@ -16,17 +16,23 @@ namespace AppointmentSchedulerServer.Controllers
             AccountRepository = accountRepository;
         }
 
-        [HttpPost(Name = "create-admin")]
-        public ActionResult<int> Post(Account account)
+        [HttpPost("create-admin")]
+        public async Task<int> Post(Account account)
         {
             if (account is null)
             {
-                throw new ArgumentNullException(nameof(account));
+                return -1;
             }
 
-            AccountRepository.Save(account);
-            return 1;
+            await AccountRepository.Save(account);
+            return 1;    
+        }
 
+        [HttpPost("authenticate")]
+        public async Task<IActionResult> Authenticate(string username, string password)
+        {
+            bool isInDatabase = await AccountRepository.ExistsByNameAndPassword(new Account(username, password));
+            return (isInDatabase) ? Ok() : NotFound();
         }
 
         [HttpGet]

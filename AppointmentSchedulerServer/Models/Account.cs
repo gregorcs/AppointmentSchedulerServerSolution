@@ -2,9 +2,9 @@
 {
     public class Account
     {
-        public Account(int id, string username, string password)
+
+        public Account(string username, string password)
         {
-            Id = id;
             Username = username;
             Password = password;
         }

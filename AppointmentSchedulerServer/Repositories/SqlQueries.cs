@@ -17,7 +17,8 @@ namespace AppointmentSchedulerServer.Repositories
         /*        public static readonly string QUERY_SAVE_ACCOUNT = "INSERT INTO " + TABLE_ACCOUNTS + " (" + COLUMN_USERNAME + ", " 
                     + COLUMN_PASSWORD + ")" + " VALUES " + "@Username" + " AND " + "@Password";*/
         public static readonly string QUERY_SAVE_ACCOUNT = "INSERT INTO " + TABLE_ACCOUNTS + " VALUES " + "(" + "@Username" + ", " + "@Password" + ")";
-
+        public static readonly string QUERY_SELECT_BY_USERNAME_AND_PASSWORD = "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE " + COLUMN_USERNAME + " = " + "@Username"
+            + " AND " + COLUMN_PASSWORD + " = " + "@Password";
         public static SqlConnection GetConnection()
         {
             try
