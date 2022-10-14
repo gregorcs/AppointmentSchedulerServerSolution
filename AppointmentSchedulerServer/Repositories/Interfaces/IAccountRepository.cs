@@ -2,8 +2,8 @@
 
 namespace AppointmentSchedulerServer.Repositories
 {
-    public interface IAccountRepository : ICrudRepository<Account, Guid>
+    public interface IAccountRepository : ICrudRepository<Account, int>
     {
-        public Task<bool> ExistsByNameAndPassword(Account entity);
+        public Task<bool> ValidateAccountByEmailAndPassword(Account entity);
     }
 }

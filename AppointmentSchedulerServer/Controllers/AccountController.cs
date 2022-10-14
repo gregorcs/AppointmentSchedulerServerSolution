@@ -1,4 +1,5 @@
-﻿using AppointmentSchedulerServer.Entities;
+﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.Entities;
 using AppointmentSchedulerServer.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,22 +18,20 @@ namespace AppointmentSchedulerServer.Controllers
         }
 
         [HttpPost("create-admin")]
-        public async Task<int> Post(Account account)
+        public async Task<ActionResult<Account>> Post(Account account)
         {
             if (account is null)
             {
-                return -1;
+                return NotFound();
             }
-
-            await AccountRepository.Save(account);
-            return 1;    
+            //change to dto
+            return await AccountRepository.Save(account);
         }
 
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate(string username, string password)
+        public async Task<IActionResult> Authenticate(string email, string password)
         {
-            bool isInDatabase = await AccountRepository.ExistsByNameAndPassword(new Account(username, password));
-            return (isInDatabase) ? Ok() : NotFound();
+            return await AccountRepository.ValidateAccountByEmailAndPassword(new Account(email, password)) ? Ok() : NotFound();
         }
 
         [HttpGet]

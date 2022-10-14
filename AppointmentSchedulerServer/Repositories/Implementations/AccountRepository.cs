@@ -1,12 +1,23 @@
-﻿using AppointmentSchedulerServer.Entities;
+﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.DbConnections;
+using AppointmentSchedulerServer.Entities;
 using AppointmentSchedulerServer.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Data;
+using Dapper;
 
 namespace AppointmentSchedulerServer.Repositories
 {
     public class AccountRepository : IAccountRepository
-
     {
+        private readonly SqlServerDbConnectionFactory _sqlDbConnectionFactory;
+
+        public AccountRepository(SqlServerDbConnectionFactory sqlDbConnectionFactory)
+        {
+            _sqlDbConnectionFactory = sqlDbConnectionFactory;
+        }
+
         public Task Delete(Account entity)
         {
             throw new NotImplementedException();
@@ -17,62 +28,25 @@ namespace AppointmentSchedulerServer.Repositories
             throw new NotImplementedException();
         }
 
-        public Task DeleteById(Guid id)
+        public Task DeleteById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> ExistsById(Guid id)
+        public async Task<bool> ExistsById(int id)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
-        public async Task<bool> ExistsByNameAndPassword(Account entity)
+        public async Task<bool> ValidateAccountByEmailAndPassword(Account entity)
         {
-            using SqlConnection connection = SqlQueries.GetConnection();
-
-            try
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            var result = await database.QueryFirstOrDefaultAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, entity);
+            if (result != null)
             {
-                await connection.OpenAsync();
+                bool passwordMatches = BCrypt.Net.BCrypt.Verify(entity.Password, result.Password);
+                return passwordMatches && entity.Email.Equals(result.Email);
             }
-            catch (Exception ex)
-            {
-                throw new ConnectionProblemException("could not initialize connection", ex);
-            }
-
-            SqlCommand cmd = connection.CreateCommand();
-
-            SqlParameter usernameParameter = new("@Username", System.Data.SqlDbType.NVarChar);
-            /*            SqlParameter passwordParameter = new("@Password", System.Data.SqlDbType.Binary);*/
-            SqlParameter passwordParameter = new("@Password", System.Data.SqlDbType.NVarChar);
-
-            usernameParameter.Value = entity.Username;
-            passwordParameter.Value = entity.Password;
-
-            cmd.Parameters.Add(usernameParameter);
-            cmd.Parameters.Add(passwordParameter);
-
-            cmd.CommandText = SqlQueries.QUERY_SELECT_BY_USERNAME_AND_PASSWORD;
-            int rowsAffected;
-
-            try
-            {
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        Console.WriteLine(String.Format("{0}", reader.GetString(1), reader.GetString(2)));
-                        return (entity.Username.Equals(reader.GetString(1)) && entity.Password.Equals(reader.GetString(2)));
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new LoginFailedException("Login query failed", ex);
-            }
-
-            //TODO lots of stuff to fix, save PW as binary or base64 nvarchar, add error handling all the way up to api declaration, return the created account
-            await connection.CloseAsync();
             return false;
         }
 
@@ -81,58 +55,29 @@ namespace AppointmentSchedulerServer.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Account>> FindAllById(IEnumerable<Guid> Ids)
+        public Task<IEnumerable<Account>> FindAllById(IEnumerable<int> Ids)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Account> FindById(Guid id)
+        public async Task<Account> FindById(int id)
         {
-            throw new NotImplementedException();
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            return await database.QueryFirstOrDefaultAsync<Account>(SqlQueries.FIND_BY_ID, new { Id = id });
         }
 
-        public async Task<int> Save(Account entity)
+        public async Task<Account> Save(Account entity)
         {
-            using SqlConnection connection = SqlQueries.GetConnection();
-
-            try
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password);
+            var result = await database.ExecuteScalarAsync<int>(SqlQueries.QUERY_SAVE_ACCOUNT, entity);
+            if (result != 0)
             {
-                await connection.OpenAsync();
-            } catch (Exception ex)
+                return await FindById(result);
+            } else
             {
-                throw new ConnectionProblemException("could not initialize connection", ex);
+                throw new DatabaseInsertionException("could not insert into database");
             }
-
-            SqlCommand cmd = connection.CreateCommand();
-
-            SqlParameter usernameParameter = new("@Username", System.Data.SqlDbType.NVarChar);
-            /*            SqlParameter passwordParameter = new("@Password", System.Data.SqlDbType.Binary);*/
-            SqlParameter passwordParameter = new("@Password", System.Data.SqlDbType.NVarChar);
-
-            usernameParameter.Value = entity.Username;
-            passwordParameter.Value = entity.Password;
-
-            cmd.Parameters.Add(usernameParameter);
-            cmd.Parameters.Add(passwordParameter);
-
-            cmd.CommandText = SqlQueries.QUERY_SAVE_ACCOUNT;
-            int rowsAffected;
-
-            try
-            {
-                rowsAffected = await cmd.ExecuteNonQueryAsync();
-                if (rowsAffected <= 0)
-                {
-                    //todo add something proper here :)
-                    throw new Exception();
-                }
-            } catch(Exception ex) {
-                throw new DatabaseInsertionException("Could not save account", ex);
-            }
-
-            //TODO lots of stuff to fix, save PW as binary or base64 nvarchar, add error handling all the way up to api declaration, return the created account
-            await connection.CloseAsync();
-            return rowsAffected;
         }
 
         public Task<int> SaveAll(IEnumerable<Account> entities)

@@ -1,8 +1,10 @@
-﻿namespace AppointmentSchedulerServer.Repositories
+﻿using AppointmentSchedulerServer.Entities;
+
+namespace AppointmentSchedulerServer.Repositories
 {
     public interface ICrudRepository<T, ID>
     {
-        public Task<int> Save(T entity);
+        public Task<Account> Save(T entity);
         public Task<int> SaveAll(IEnumerable<T> entities);
         public Task<T> FindById(ID id);
         public Task<Boolean> ExistsById(ID id);
