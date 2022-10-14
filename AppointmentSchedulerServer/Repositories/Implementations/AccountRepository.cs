@@ -44,7 +44,7 @@ namespace AppointmentSchedulerServer.Repositories
             var result = await database.QueryFirstOrDefaultAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, entity);
             if (result != null)
             {
-                bool passwordMatches = BCrypt.Net.BCrypt.Verify(entity.Password, result.Password);
+                bool passwordMatches = BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, result.Password);
                 return passwordMatches && entity.Email.Equals(result.Email);
             }
             return false;
@@ -69,7 +69,7 @@ namespace AppointmentSchedulerServer.Repositories
         public async Task<Account> Save(Account entity)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password);
+            entity.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(entity.Password);
             var result = await database.ExecuteScalarAsync<int>(SqlQueries.QUERY_SAVE_ACCOUNT, entity);
             if (result != 0)
             {

@@ -17,7 +17,7 @@ namespace AppointmentSchedulerServer.Controllers
             AccountRepository = accountRepository;
         }
 
-        [HttpPost("create-admin")]
+        [HttpPost("create-account")]
         public async Task<ActionResult<Account>> Post(Account account)
         {
             if (account is null)
