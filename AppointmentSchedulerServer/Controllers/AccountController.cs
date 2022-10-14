@@ -1,7 +1,5 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
-using AppointmentSchedulerServer.Entities;
+﻿using AppointmentSchedulerServer.Entities;
 using AppointmentSchedulerServer.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppointmentSchedulerServer.Controllers
@@ -25,7 +23,14 @@ namespace AppointmentSchedulerServer.Controllers
                 return NotFound();
             }
             //change to dto
-            return await AccountRepository.Save(account);
+            var result = await AccountRepository.Save(account);
+            if (result == null)
+            {
+                return NotFound();
+            } else
+            {
+                return Ok(result);
+            }
         }
 
         [HttpPost("authenticate")]

@@ -2,8 +2,6 @@
 using AppointmentSchedulerServer.DbConnections;
 using AppointmentSchedulerServer.Entities;
 using AppointmentSchedulerServer.Exceptions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using System.Data;
 using Dapper;
 
