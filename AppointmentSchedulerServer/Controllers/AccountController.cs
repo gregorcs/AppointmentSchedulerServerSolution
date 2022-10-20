@@ -1,4 +1,5 @@
-﻿using AppointmentSchedulerServer.Entities;
+﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.Entities;
 using AppointmentSchedulerServer.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,18 +33,26 @@ namespace AppointmentSchedulerServer.Controllers
                 return Ok(result);
             }
         }
-
+        //error handling when calling repo - how should it look like?
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate(string email, string password)
+        public async Task<IActionResult> Authenticate([FromBody] AccountDTO accountDTO)
         {
-            return await AccountRepository.ValidateAccountByEmailAndPassword(new Account(email, password)) ? Ok() : NotFound();
+            return await AccountRepository.ValidateAccountByEmailAndPassword(new Account(accountDTO)) 
+                ? Ok() : NotFound();
         }
 
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<Account> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return View();
+            Account accountFound = await AccountRepository.FindById(id);
+            if (accountFound != null)
+            {
+                return Ok(accountFound);
+            } else
+            {
+                return NotFound();
+            }
         }
 
         [HttpDelete]
@@ -55,6 +64,18 @@ namespace AppointmentSchedulerServer.Controllers
         [HttpPut(Name = "update-admin")]
         public void Update(Account admin)
         {
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> FindAll()
+        {
+            IEnumerable<Account> accountsFound = await AccountRepository.FindAll();
+            if (accountsFound != null) {
+                return Ok(accountsFound);
+            } else
+            {
+                return NotFound();
+            }
         }
     }
 }

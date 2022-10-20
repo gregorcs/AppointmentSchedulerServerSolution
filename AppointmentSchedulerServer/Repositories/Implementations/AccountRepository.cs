@@ -39,7 +39,7 @@ namespace AppointmentSchedulerServer.Repositories
         public async Task<bool> ValidateAccountByEmailAndPassword(Account entity)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            var result = await database.QueryFirstOrDefaultAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, entity);
+            var result = await database.QueryFirstAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, entity);
             if (result != null)
             {
                 bool passwordMatches = BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, result.Password);
@@ -48,9 +48,10 @@ namespace AppointmentSchedulerServer.Repositories
             return false;
         }
 
-        public Task<IEnumerable<Account>> FindAll()
+        public async Task<IEnumerable<Account>> FindAll()
         {
-            throw new NotImplementedException();
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            return await database.QueryAsync<Account>(SqlQueries.SELECT_EVERYTHING_ACCOUNTS);
         }
 
         public Task<IEnumerable<Account>> FindAllById(IEnumerable<int> Ids)
@@ -61,7 +62,7 @@ namespace AppointmentSchedulerServer.Repositories
         public async Task<Account> FindById(int id)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            return await database.QueryFirstOrDefaultAsync<Account>(SqlQueries.FIND_BY_ID, new { Id = id });
+            return await database.QueryFirstAsync<Account>(SqlQueries.FIND_BY_ID, new { Id = id });
         }
 
         public async Task<Account> Save(Account entity)

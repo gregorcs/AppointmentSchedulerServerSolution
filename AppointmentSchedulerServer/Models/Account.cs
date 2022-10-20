@@ -1,13 +1,16 @@
-﻿namespace AppointmentSchedulerServer.Entities
+﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+
+namespace AppointmentSchedulerServer.Entities
 {
     public class Account
     {
         public Account() { }
 
-        public Account(string email, string password) 
+
+        public Account(AccountDTO account) 
         { 
-            Email = email;
-            Password = password;
+            Email = account.Email;
+            Password = account.Password;
         }
         public Account(int id, string username, string password, string email)
         {
