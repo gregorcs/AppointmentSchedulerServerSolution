@@ -33,7 +33,7 @@ namespace AppointmentSchedulerServer.Repositories
 
         public async Task<bool> ExistsById(int id)
         {
-            return false;
+            return FindById(id) != null;
         }
 
         public async Task<bool> ValidateAccountByEmailAndPassword(Account entity)
