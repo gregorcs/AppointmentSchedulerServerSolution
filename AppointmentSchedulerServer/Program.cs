@@ -1,8 +1,12 @@
+using AppointmentSchedulerServer.DbConnections;
+using AppointmentSchedulerServer.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
-
+builder.Services.AddSingleton(new SqlServerDbConnectionFactory("Server=.;Database=AppointmentScheduler;integrated security=true"));
+builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
