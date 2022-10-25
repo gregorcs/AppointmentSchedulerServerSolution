@@ -50,8 +50,8 @@ namespace AppointmentSchedulerServer.Controllers
             
         }
 
-        [HttpPut(Name = "update-admin")]
-        public void Update(Account admin)
+        [HttpPut(Name = "update-account")]
+        public void Update(Account account)
         {
         }
 
