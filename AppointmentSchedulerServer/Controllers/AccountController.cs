@@ -16,6 +16,7 @@ namespace AppointmentSchedulerServer.Controllers
             AccountRepository = accountRepository;
         }
 
+        //TODO fix error not thrown when posting already registered email
         [HttpPost("create-account")]
         public async Task<ActionResult<Account>> Post(Account account)
         {
@@ -25,13 +26,7 @@ namespace AppointmentSchedulerServer.Controllers
             }
             //change to dto
             var result = await AccountRepository.Save(account);
-            if (result == null)
-            {
-                return NotFound();
-            } else
-            {
-                return Ok(result);
-            }
+            return result != null ? Ok(result) : NotFound();
         }
         //error handling when calling repo - how should it look like?
         [HttpPost("authenticate")]
@@ -46,13 +41,7 @@ namespace AppointmentSchedulerServer.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             Account accountFound = await AccountRepository.FindById(id);
-            if (accountFound != null)
-            {
-                return Ok(accountFound);
-            } else
-            {
-                return NotFound();
-            }
+            return accountFound != null ? Ok(accountFound) : NotFound();
         }
 
         [HttpDelete]
@@ -69,13 +58,8 @@ namespace AppointmentSchedulerServer.Controllers
         [HttpGet]
         public async Task<IActionResult> FindAll()
         {
-            IEnumerable<Account> accountsFound = await AccountRepository.FindAll();
-            if (accountsFound != null) {
-                return Ok(accountsFound);
-            } else
-            {
-                return NotFound();
-            }
+            var result = await AccountRepository.FindAll();
+            return result != null ? Ok(result) : NotFound();
         }
     }
 }
