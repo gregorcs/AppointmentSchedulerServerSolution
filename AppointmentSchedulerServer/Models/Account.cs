@@ -7,8 +7,8 @@ namespace AppointmentSchedulerServer.Entities
         public Account() { }
 
 
-        public Account(AccountDTO account) 
-        { 
+        public Account(AccountDTO account)
+        {
             Email = account.Email;
             Password = account.Password;
         }

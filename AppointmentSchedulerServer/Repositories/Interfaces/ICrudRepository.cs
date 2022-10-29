@@ -1,6 +1,4 @@
-﻿using AppointmentSchedulerServer.Entities;
-
-namespace AppointmentSchedulerServer.Repositories
+﻿namespace AppointmentSchedulerServer.Repositories
 {
     public interface ICrudRepository<T, ID>
     {

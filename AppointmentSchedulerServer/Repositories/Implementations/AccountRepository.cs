@@ -1,9 +1,8 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
-using AppointmentSchedulerServer.DbConnections;
+﻿using AppointmentSchedulerServer.DbConnections;
 using AppointmentSchedulerServer.Entities;
 using AppointmentSchedulerServer.Exceptions;
-using System.Data;
 using Dapper;
+using System.Data;
 
 namespace AppointmentSchedulerServer.Repositories
 {
@@ -42,8 +41,8 @@ namespace AppointmentSchedulerServer.Repositories
             var result = await database.QueryFirstAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, entity);
             if (result != null)
             {
-                bool passwordMatches = BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, result.Password);
-                return passwordMatches && entity.Email.Equals(result.Email);
+                return BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, result.Password)
+                        && entity.Email.Equals(result.Email);
             }
             return false;
         }
@@ -65,8 +64,9 @@ namespace AppointmentSchedulerServer.Repositories
             Account accountFound;
             try
             {
-               accountFound = await database.QueryFirstAsync<Account>(SqlQueries.FIND_BY_ID, new { Id = id });
-            } catch (Exception ex)
+                accountFound = await database.QueryFirstAsync<Account>(SqlQueries.FIND_BY_ID, new { Id = id });
+            }
+            catch (Exception ex)
             {
                 throw new NotFoundException("Search of the specified account failed", ex);
             }
@@ -82,14 +82,16 @@ namespace AppointmentSchedulerServer.Repositories
             try
             {
                 createdId = await database.ExecuteScalarAsync<int>(SqlQueries.QUERY_SAVE_ACCOUNT, entity);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new DatabaseInsertionException("There was a problem saving the account", ex);
             }
             if (createdId != 0)
             {
                 return await FindById(createdId);
-            } else
+            }
+            else
             {
                 throw new DatabaseInsertionException("could not insert into database");
             }

@@ -14,13 +14,17 @@ namespace AppointmentSchedulerServer.Controllers
     {
         private readonly IAccountRepository AccountRepository;
 
+        private const string EmployeeRole = "Admin";
+        private const string UserRole = "User";
+        private const string UserAndEmployeeRoles = UserRole + ", " + EmployeeRole;
+
         public AccountController(IAccountRepository accountRepository)
         {
             AccountRepository = accountRepository;
         }
 
         //TODO fix error not thrown when posting already registered email
-        [HttpPost("create-account")]
+        [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult<Account>> Post(Account account)
         {
@@ -43,7 +47,8 @@ namespace AppointmentSchedulerServer.Controllers
             {
                 var token = JWTHandler.CreateAdminToken(accountDTO);
                 return Ok(token);
-            } else
+            }
+            else
             {
                 return BadRequest();
             }
@@ -51,7 +56,7 @@ namespace AppointmentSchedulerServer.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = EmployeeRole)]
         public async Task<IActionResult> GetById(int id)
         {
             Account accountFound = await AccountRepository.FindById(id);
@@ -59,20 +64,20 @@ namespace AppointmentSchedulerServer.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles = "User, Admin")]
+        [Authorize(Roles = UserAndEmployeeRoles)]
         public void Delete(int Id)
         {
-            
+
         }
 
-        [HttpPut(Name = "update-account")]
-        [Authorize(Roles = "User, Admin")]
+        [HttpPut]
+        [Authorize(Roles = UserAndEmployeeRoles)]
         public void Update(Account account)
         {
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = EmployeeRole)]
         public async Task<IActionResult> FindAll()
         {
             var result = await AccountRepository.FindAll();
