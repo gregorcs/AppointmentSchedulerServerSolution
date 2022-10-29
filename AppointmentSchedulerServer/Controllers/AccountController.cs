@@ -38,9 +38,10 @@ namespace AppointmentSchedulerServer.Controllers
         public async Task<IActionResult> Authenticate([FromBody] AccountDTO accountDTO)
         {
             var isAuthenticated = await AccountRepository.ValidateAccountByEmailAndPassword(new Account(accountDTO));
+
             if (isAuthenticated)
             {
-                var token = JWTHandler.CreateUserToken(accountDTO);
+                var token = JWTHandler.CreateAdminToken(accountDTO);
                 return Ok(token);
             } else
             {

@@ -62,17 +62,33 @@ namespace AppointmentSchedulerServer.Repositories
         public async Task<Account> FindById(int id)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            return await database.QueryFirstAsync<Account>(SqlQueries.FIND_BY_ID, new { Id = id });
+            Account accountFound;
+            try
+            {
+               accountFound = await database.QueryFirstAsync<Account>(SqlQueries.FIND_BY_ID, new { Id = id });
+            } catch (Exception ex)
+            {
+                throw new NotFoundException("Search of the specified account failed", ex);
+            }
+            return accountFound;
         }
 
         public async Task<Account> Save(Account entity)
         {
+            //maybe this should be a transaction since we are saving and searching for it?
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             entity.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(entity.Password);
-            var result = await database.ExecuteScalarAsync<int>(SqlQueries.QUERY_SAVE_ACCOUNT, entity);
-            if (result != 0)
+            int createdId;
+            try
             {
-                return await FindById(result);
+                createdId = await database.ExecuteScalarAsync<int>(SqlQueries.QUERY_SAVE_ACCOUNT, entity);
+            } catch (Exception ex)
+            {
+                throw new DatabaseInsertionException("There was a problem saving the account", ex);
+            }
+            if (createdId != 0)
+            {
+                return await FindById(createdId);
             } else
             {
                 throw new DatabaseInsertionException("could not insert into database");
