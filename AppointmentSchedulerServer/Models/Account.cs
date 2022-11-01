@@ -1,6 +1,6 @@
 ﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
 
-namespace AppointmentSchedulerServer.Entities
+namespace AppointmentSchedulerServer.Models
 {
     public class Account
     {
@@ -12,7 +12,7 @@ namespace AppointmentSchedulerServer.Entities
             Email = account.Email;
             Password = account.Password;
         }
-        public Account(int id, string username, string password, string email)
+        public Account(long id, string username, string password, string email)
         {
             Id = id;
             Username = username;
@@ -20,7 +20,7 @@ namespace AppointmentSchedulerServer.Entities
             Email = email;
         }
 
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }

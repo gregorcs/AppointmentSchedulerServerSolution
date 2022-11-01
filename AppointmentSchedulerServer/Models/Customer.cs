@@ -1,4 +1,4 @@
-﻿using AppointmentSchedulerServer.Entities;
+﻿using AppointmentSchedulerServer.Models;
 
 namespace AppointmentSchedulerServer.Models
 {

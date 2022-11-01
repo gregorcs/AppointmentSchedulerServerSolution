@@ -1,5 +1,5 @@
 ﻿using AppointmentSchedulerServer.DbConnections;
-using AppointmentSchedulerServer.Entities;
+using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Exceptions;
 using Dapper;
 using System.Data;
@@ -25,12 +25,12 @@ namespace AppointmentSchedulerServer.Repositories
             throw new NotImplementedException();
         }
 
-        public Task DeleteById(int id)
+        public Task DeleteById(long id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> ExistsById(int id)
+        public async Task<bool> ExistsById(long id)
         {
             return FindById(id) != null;
         }
@@ -39,12 +39,9 @@ namespace AppointmentSchedulerServer.Repositories
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             var result = await database.QueryFirstAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, entity);
-            if (result != null)
-            {
-                return BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, result.Password)
-                        && entity.Email.Equals(result.Email);
-            }
-            return false;
+            return result != null 
+                && (BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, result.Password)
+                && entity.Email.Equals(result.Email));
         }
 
         public async Task<IEnumerable<Account>> FindAll()
@@ -53,12 +50,12 @@ namespace AppointmentSchedulerServer.Repositories
             return await database.QueryAsync<Account>(SqlQueries.SELECT_EVERYTHING_ACCOUNTS);
         }
 
-        public Task<IEnumerable<Account>> FindAllById(IEnumerable<int> Ids)
+        public Task<IEnumerable<Account>> FindAllById(IEnumerable<long> Ids)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Account> FindById(int id)
+        public async Task<Account> FindById(long id)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             Account accountFound;
@@ -77,24 +74,39 @@ namespace AppointmentSchedulerServer.Repositories
         {
             //maybe this should be a transaction since we are saving and searching for it?
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            database.Open();
             entity.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(entity.Password);
-            int createdId;
-            try
+            long createdId;
+
+            if (entity.IsAdmin)
             {
-                createdId = await database.ExecuteScalarAsync<int>(SqlQueries.QUERY_SAVE_ACCOUNT, entity);
-            }
-            catch (Exception ex)
-            {
-                throw new DatabaseInsertionException("There was a problem saving the account", ex);
-            }
-            if (createdId != 0)
-            {
-                return await FindById(createdId);
+                using var transaction = database.BeginTransaction(IsolationLevel.RepeatableRead);
+                try
+                {
+                    createdId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_ACCOUNT, entity, transaction);
+                    createdId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_EMPLOYEE, new { Id = createdId, entity.Role }, transaction);
+                    transaction.Commit();
+                    transaction.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount, ex);
+                }
             }
             else
             {
-                throw new DatabaseInsertionException("could not insert into database");
+                try
+                {
+                    createdId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_ACCOUNT, entity);
+                }
+                catch (Exception ex)
+                {
+                    throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount, ex);
+                }
             }
+            return createdId != 0 ? await FindById(createdId)
+                : throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount);
         }
 
         public Task<int> SaveAll(IEnumerable<Account> entities)

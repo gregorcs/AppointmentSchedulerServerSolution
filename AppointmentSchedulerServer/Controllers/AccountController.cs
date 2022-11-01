@@ -1,5 +1,5 @@
 ﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
-using AppointmentSchedulerServer.Entities;
+using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Repositories;
 using AppointmentSchedulerServerTests.JWT;
 using Microsoft.AspNetCore.Authorization;
@@ -26,15 +26,22 @@ namespace AppointmentSchedulerServer.Controllers
         //TODO fix error not thrown when posting already registered email
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ActionResult<Account>> Post(Account account)
+        public async Task<ActionResult<Account>> Post(AccountDTO account)
         {
             if (account is null)
             {
                 return NotFound();
             }
             //change to dto
-            var result = await AccountRepository.Save(account);
-            return result != null ? Ok(result) : NotFound();
+            try
+            {
+                var result = await AccountRepository.Save(new Account(account));
+                return result != null ? Ok(result) : NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
         //error handling when calling repo - how should it look like?
         [HttpPost("authenticate")]
