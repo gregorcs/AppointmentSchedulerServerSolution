@@ -82,7 +82,7 @@ namespace AppointmentSchedulerServer.Repositories
         {
             Account accountToSave = new(entity);
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            entity.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(entity.Password);
+            accountToSave.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(accountToSave.Password);
             long createdId;
 
             try
