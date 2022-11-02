@@ -1,4 +1,5 @@
 ﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Repositories;
 using AppointmentSchedulerServerTests.JWT;
@@ -12,53 +13,59 @@ namespace AppointmentSchedulerServer.Controllers
     [Route("api/v1/[controller]/")]
     public class AccountController : Controller
     {
-        private readonly IAccountRepository AccountRepository;
+        private readonly IAccountRepository _accountRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
         private const string EmployeeRole = "Admin";
         private const string UserRole = "User";
         private const string UserAndEmployeeRoles = UserRole + ", " + EmployeeRole;
 
-        public AccountController(IAccountRepository accountRepository)
+        public AccountController(IAccountRepository accountRepository, IEmployeeRepository employeeRepository)
         {
-            AccountRepository = accountRepository;
+            _accountRepository = accountRepository;
+            _employeeRepository = employeeRepository;
         }
 
-        //TODO fix error not thrown when posting already registered email
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult<Account>> Post(AccountDTO account)
         {
             if (account is null)
             {
-                return NotFound();
+                return BadRequest(ControllerErrorMessages.InvalidAccount);
             }
-            //change to dto
+
+            if (await _accountRepository.ExistsByEmail(account))
+            {
+                return BadRequest(ControllerErrorMessages.InvalidEmail);
+            }
             try
             {
-                var result = await AccountRepository.Save(new Account(account));
+                var result = await _accountRepository.Save(account);
                 return result != null ? Ok(result) : NotFound();
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                //i CW the exception since we are not implementing
+                //a logger and i wanna see if there are any exceptions
+                Console.WriteLine(ex);
+                return StatusCode(500, ControllerErrorMessages.EncounteredError);
             }
         }
-        //error handling when calling repo - how should it look like?
+
         [HttpPost("authenticate")]
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody] AccountDTO accountDTO)
         {
-            var isAuthenticated = await AccountRepository.ValidateAccountByEmailAndPassword(new Account(accountDTO));
-
-            if (isAuthenticated)
+            var accountIdFound = await _accountRepository.ValidateAccountByEmailAndPassword(accountDTO);
+            var employeeFound = await _employeeRepository.FindById(accountIdFound);
+            if (accountIdFound > 0)
             {
-                var token = JWTHandler.CreateAdminToken(accountDTO);
-                return Ok(token);
+                return employeeFound == null 
+                    ? Ok(JWTHandler.CreateUserToken(accountDTO)) 
+                    : Ok(JWTHandler.CreateAdminToken(accountDTO));
             }
-            else
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
         [HttpGet]
@@ -66,7 +73,7 @@ namespace AppointmentSchedulerServer.Controllers
         [Authorize(Roles = EmployeeRole)]
         public async Task<IActionResult> GetById(int id)
         {
-            Account accountFound = await AccountRepository.FindById(id);
+            AccountDTO accountFound = await _accountRepository.FindById(id);
             return accountFound != null ? Ok(accountFound) : NotFound();
         }
 
@@ -87,7 +94,7 @@ namespace AppointmentSchedulerServer.Controllers
         [Authorize(Roles = EmployeeRole)]
         public async Task<IActionResult> FindAll()
         {
-            var result = await AccountRepository.FindAll();
+            var result = await _accountRepository.FindAll();
             return result != null ? Ok(result) : NotFound();
         }
     }

@@ -3,6 +3,7 @@ using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Exceptions;
 using Dapper;
 using System.Data;
+using AppointmentSchedulerServer.Data_Transfer_Objects;
 
 namespace AppointmentSchedulerServer.Repositories
 {
@@ -15,12 +16,12 @@ namespace AppointmentSchedulerServer.Repositories
             _sqlDbConnectionFactory = sqlDbConnectionFactory;
         }
 
-        public Task Delete(Account entity)
+        public Task Delete(AccountDTO entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAll(IEnumerable<Account> entities)
+        public Task DeleteAll(IEnumerable<AccountDTO> entities)
         {
             throw new NotImplementedException();
         }
@@ -32,36 +33,43 @@ namespace AppointmentSchedulerServer.Repositories
 
         public async Task<bool> ExistsById(long id)
         {
-            return FindById(id) != null;
+            return await FindById(id) != null;
         }
 
-        public async Task<bool> ValidateAccountByEmailAndPassword(Account entity)
+        public async Task<long> ValidateAccountByEmailAndPassword(AccountDTO entity)
+        {
+            Account accountToValidate = new(entity);
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            var accountFound = await database.QueryFirstAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, accountToValidate);
+            if (accountFound != null 
+                && (BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, accountFound.Password)
+                && entity.Email.Equals(accountFound.Email)))
+            {
+                return accountFound.PK_AccountId;
+            } else
+            {
+                return 0;
+            }
+        }
+
+        public async Task<IEnumerable<AccountDTO>> FindAll()
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            var result = await database.QueryFirstAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, entity);
-            return result != null 
-                && (BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, result.Password)
-                && entity.Email.Equals(result.Email));
+            return await database.QueryAsync<AccountDTO>(SqlQueries.SELECT_EVERYTHING_ACCOUNTS);
         }
 
-        public async Task<IEnumerable<Account>> FindAll()
-        {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            return await database.QueryAsync<Account>(SqlQueries.SELECT_EVERYTHING_ACCOUNTS);
-        }
-
-        public Task<IEnumerable<Account>> FindAllById(IEnumerable<long> Ids)
+        public Task<IEnumerable<AccountDTO>> FindAllById(IEnumerable<long> Ids)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Account> FindById(long id)
+        public async Task<AccountDTO> FindById(long id)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            Account accountFound;
+            AccountDTO accountFound;
             try
             {
-                accountFound = await database.QueryFirstAsync<Account>(SqlQueries.FIND_BY_ID, new { Id = id });
+                accountFound = await database.QueryFirstAsync<AccountDTO>(SqlQueries.FIND_ACCOUNT_BY_ID, new { Id = id });
             }
             catch (Exception ex)
             {
@@ -70,48 +78,36 @@ namespace AppointmentSchedulerServer.Repositories
             return accountFound;
         }
 
-        public async Task<Account> Save(Account entity)
+        public async Task<AccountDTO> Save(AccountDTO entity)
         {
-            //maybe this should be a transaction since we are saving and searching for it?
+            Account accountToSave = new(entity);
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            database.Open();
             entity.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(entity.Password);
             long createdId;
 
-            if (entity.IsAdmin)
+            try
             {
-                using var transaction = database.BeginTransaction(IsolationLevel.RepeatableRead);
-                try
-                {
-                    createdId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_ACCOUNT, entity, transaction);
-                    createdId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_EMPLOYEE, new { Id = createdId, entity.Role }, transaction);
-                    transaction.Commit();
-                    transaction.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount, ex);
-                }
+                createdId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_ACCOUNT, accountToSave);
             }
-            else
+            catch (Exception ex)
             {
-                try
-                {
-                    createdId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_ACCOUNT, entity);
-                }
-                catch (Exception ex)
-                {
-                    throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount, ex);
-                }
+                throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount, ex);
             }
+
             return createdId != 0 ? await FindById(createdId)
                 : throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount);
         }
 
-        public Task<int> SaveAll(IEnumerable<Account> entities)
+        public Task<int> SaveAll(IEnumerable<AccountDTO> entities)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> ExistsByEmail(AccountDTO entity)
+        {
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            var result = await database.QueryFirstOrDefaultAsync<AccountDTO>(SqlQueries.FIND_ACCOUNT_BY_EMAIL, entity);
+            return result != null;
         }
     }
 }
