@@ -1,9 +1,11 @@
-﻿using AppointmentSchedulerServer.Entities;
+﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.Models;
 
 namespace AppointmentSchedulerServer.Repositories
 {
-    public interface IAccountRepository : ICrudRepository<Account, int>
+    public interface IAccountRepository : ICrudRepository<AccountDTO, long>
     {
-        public Task<bool> ValidateAccountByEmailAndPassword(Account entity);
+        public Task<long> ValidateAccountByEmailAndPassword(AccountDTO entity);
+        public Task<bool> ExistsByEmail(AccountDTO entity);
     }
 }
