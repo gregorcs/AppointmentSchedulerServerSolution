@@ -62,8 +62,8 @@ namespace AppointmentSchedulerServer.Controllers
             if (accountIdFound > 0)
             {
                 return employeeFound == null 
-                    ? Ok(JWTHandler.CreateUserToken(accountDTO)) 
-                    : Ok(JWTHandler.CreateAdminToken(accountDTO));
+                    ? Ok(new {Role = "User", JwtToken = JWTHandler.CreateUserToken(accountDTO) }) 
+                    : Ok(new {Role = "Admin" , JwtToken = JWTHandler.CreateAdminToken(accountDTO) });
             }
             return BadRequest();
         }
