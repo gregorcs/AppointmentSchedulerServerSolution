@@ -96,5 +96,10 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
         {
             throw new NotImplementedException();
         }
+
+        public Task Update(EmployeeDTO entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

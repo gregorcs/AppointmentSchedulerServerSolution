@@ -38,5 +38,8 @@ namespace AppointmentSchedulerServer.Repositories
 
         public const string FIND_EMPLOYEE_BY_ID = "SELECT * FROM " + TABLE_EMPLOYEES + " WHERE " + COLUMN_FK_ACCOUNT_ID
         + " = " + "@Id";
+
+        //split into UPDATE_ACCOUNT_PASSWORD & UPDATE_ACCOUNT_EMAIL?; select by id instead of email?;
+        public const string UPDATE_ACCOUNT_CREDENTIALS = " UPDATE (Email) (Password) FROM " + TABLE_ACCOUNTS + " WHERE " + COLUMN_EMAIL + " = " + "@Email";
     }
 }

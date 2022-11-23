@@ -86,8 +86,10 @@ namespace AppointmentSchedulerServer.Controllers
 
         [HttpPut]
         [Authorize(Roles = UserAndEmployeeRoles)]
-        public void Update(Account account)
+        public async Task<IActionResult> UpdateAccount(AccountDTO accountDTO)
         {
+            AccountDTO accountToUpdate = await _accountRepository.Update();
+            return accountToUpdate != null ? Ok(accountToUpdate) : NotFound();
         }
 
         [HttpGet]

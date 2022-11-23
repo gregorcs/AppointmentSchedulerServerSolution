@@ -109,5 +109,14 @@ namespace AppointmentSchedulerServer.Repositories
             var result = await database.QueryFirstOrDefaultAsync<AccountDTO>(SqlQueries.FIND_ACCOUNT_BY_EMAIL, entity);
             return result != null;
         }
+
+        //feedback would be appreciated for i am in the fog of async & repositories. amen
+        public async Task Update(AccountDTO entity)
+        {
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            entity.Email = BCrypt.Net.BCrypt.EnhancedHashPassword(entity.Email);
+            entity.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(entity.Password);
+            var updatedAccount = await database.QueryFirstAsync<AccountDTO>(SqlQueries.UPDATE_ACCOUNT_CREDENTIALS, entity);
+        }
     }
 }
