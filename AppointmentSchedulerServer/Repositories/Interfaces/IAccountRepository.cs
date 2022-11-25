@@ -7,5 +7,6 @@ namespace AppointmentSchedulerServer.Repositories
     {
         public Task<long> ValidateAccountByEmailAndPassword(AccountDTO entity);
         public Task<bool> ExistsByEmail(AccountDTO entity);
+        public Task<AccountDTO> Update(AccountDTO entity);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace AppointmentSchedulerServer.Repositories
+﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+
+namespace AppointmentSchedulerServer.Repositories
 {
     public interface ICrudRepository<T, ID>
     {
@@ -11,6 +13,7 @@
         public Task DeleteById(ID id);
         public Task Delete(T entity);
         public Task DeleteAll(IEnumerable<T> entities);
-        public Task Update(T entity);
+        public Task<AccountDTO> Update(AccountDTO entity);
+        
     }
 }

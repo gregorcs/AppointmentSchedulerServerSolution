@@ -111,7 +111,7 @@ namespace AppointmentSchedulerServer.Repositories
         }
 
         //feedback would be appreciated for i am in the fog of async & repositories. amen
-        public async Task Update(AccountDTO entity)
+        public async Task<AccountDTO> Update(AccountDTO entity)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             entity.Email = BCrypt.Net.BCrypt.EnhancedHashPassword(entity.Email);
