@@ -1,4 +1,5 @@
-﻿using AppointmentSchedulerServer.Exceptions;
+﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Repositories;
 using AppointmentSchedulerServer.Repositories.Interfaces;
@@ -31,10 +32,12 @@ namespace AppointmentSchedulerServer.Controllers
         {
             return "value";
         }
-
+        //todo figure out how to get appointment, employee, account into controller -> repository
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async void Post([FromBody] AppointmentDTO appointmentDTO)
         {
+
+            var result = await _appointmentRepository.Save(appointmentDTO);
         }
 
         [HttpPut("{id}")]

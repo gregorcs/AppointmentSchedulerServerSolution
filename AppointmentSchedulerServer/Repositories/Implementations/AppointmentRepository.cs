@@ -1,4 +1,5 @@
-﻿using AppointmentSchedulerServer.DbConnections;
+﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.DbConnections;
 using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Repositories.Interfaces;
@@ -17,12 +18,12 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             _sqlDbConnectionFactory = sqlDbConnectionFactory;
         }
 
-        public Task Delete(Appointment entity)
+        public Task Delete(AppointmentDTO entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAll(IEnumerable<Appointment> entities)
+        public Task DeleteAll(IEnumerable<AppointmentDTO> entities)
         {
             throw new NotImplementedException();
         }
@@ -37,18 +38,18 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Appointment>> FindAll()
+        public Task<IEnumerable<AppointmentDTO>> FindAll()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Appointment>> FindAllByAccountId(long id)
+        public async Task<IEnumerable<AppointmentDTO>> FindAllByAccountId(long id)
         {
-            IEnumerable<Appointment> appointmentsFound;
+            IEnumerable<AppointmentDTO> appointmentsFound;
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             try
             {
-                appointmentsFound = await database.QueryAsync<Appointment>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_ACCOUNT_ID, id);
+                appointmentsFound = await database.QueryAsync<AppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_ACCOUNT_ID, id);
             }
             catch(Exception ex)
             {
@@ -57,25 +58,32 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             return appointmentsFound;
         }
 
-        public Task<IEnumerable<Appointment>> FindAllById(IEnumerable<long> Ids)
+        public Task<IEnumerable<AppointmentDTO>> FindAllById(IEnumerable<long> Ids)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Appointment> FindById(long id)
+        public Task<AppointmentDTO> FindById(long id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Appointment> Save(Appointment entity)
+        public Task<AppointmentDTO> Save(AppointmentDTO entity)
         {
             //Add to appointment
             //Add to account_appointment
             //for employee and also for appointment
+            Appointment appointmentToSave = new(entity);
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            long createdId;
+/*            try
+            {
+                createdId = await database.QueryAsync<long>(SqlQueries.)
+            }*/
             throw new NotImplementedException();
         }
 
-        public Task<int> SaveAll(IEnumerable<Appointment> entities)
+        public Task<int> SaveAll(IEnumerable<AppointmentDTO> entities)
         {
             throw new NotImplementedException();
         }

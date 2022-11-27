@@ -16,7 +16,7 @@ namespace AppointmentSchedulerServer.Models
         }
 
         public Employee(EmployeeDTO employeeDTO)
-            : base(employeeDTO.Username, employeeDTO.Password, employeeDTO.Email)
+            : base(employeeDTO.Username, employeeDTO.Password, employeeDTO.Email, employeeDTO.Appointments)
         {
             Role = employeeDTO.Role;
             RoomNumber = employeeDTO.RoomNumber;
