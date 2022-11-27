@@ -55,7 +55,7 @@ namespace AppointmentSchedulerServer.Repositories
         public async Task<IEnumerable<AccountDTO>> FindAll()
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            return await database.QueryAsync<AccountDTO>(SqlQueries.SELECT_EVERYTHING_ACCOUNTS);
+            return await database.QueryAsync<AccountDTO>(SqlQueries.QUERY_SELECT_EVERYTHING_ACCOUNTS);
         }
 
         public Task<IEnumerable<AccountDTO>> FindAllById(IEnumerable<long> Ids)
@@ -69,7 +69,7 @@ namespace AppointmentSchedulerServer.Repositories
             AccountDTO accountFound;
             try
             {
-                accountFound = await database.QueryFirstAsync<AccountDTO>(SqlQueries.FIND_ACCOUNT_BY_ID, new { Id = id });
+                accountFound = await database.QueryFirstAsync<AccountDTO>(SqlQueries.QUERY_FIND_ACCOUNT_BY_ID, new { Id = id });
             }
             catch (Exception ex)
             {
@@ -106,7 +106,7 @@ namespace AppointmentSchedulerServer.Repositories
         public async Task<bool> ExistsByEmail(AccountDTO entity)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            var result = await database.QueryFirstOrDefaultAsync<AccountDTO>(SqlQueries.FIND_ACCOUNT_BY_EMAIL, entity);
+            var result = await database.QueryFirstOrDefaultAsync<AccountDTO>(SqlQueries.QUERY_FIND_ACCOUNT_BY_EMAIL, entity);
             return result != null;
         }
     }

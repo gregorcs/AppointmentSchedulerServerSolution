@@ -1,4 +1,5 @@
 ﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using System.Collections;
 
 namespace AppointmentSchedulerServer.Models
 {
@@ -11,6 +12,7 @@ namespace AppointmentSchedulerServer.Models
             Email = account.Email;
             Password = account.Password;
             Username = account.Username;
+            Appointments = account.Appointments;
         }
         public Account(long pk_AccountId, string username, string password, string email)
         {
@@ -19,16 +21,18 @@ namespace AppointmentSchedulerServer.Models
             Password = password;
             Email = email;
         }
-        public Account(string username, string password, string email)
+        public Account(string username, string password, string email, ArrayList appointments)
         {
             Username = username;
             Password = password;
             Email = email;
+            Appointments = appointments;
         }
 
         public long PK_AccountId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
+        public ArrayList Appointments { get; set; }
     }
 }

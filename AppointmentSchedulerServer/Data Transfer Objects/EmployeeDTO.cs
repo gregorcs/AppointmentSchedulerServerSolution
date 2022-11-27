@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
 
 namespace AppointmentSchedulerServer.Data_Transfer_Objects
 {
@@ -19,8 +20,8 @@ namespace AppointmentSchedulerServer.Data_Transfer_Objects
             RoomNumber = roomNumber;
         }
 
-        public EmployeeDTO(string username, string email, string password, string role, int roomNumber)
-            : base(username, email, password)
+        public EmployeeDTO(string username, string email, string password, string role, int roomNumber, ArrayList appointments)
+            : base(username, email, password, appointments)
         {
             Role = role;
             RoomNumber = roomNumber;

@@ -1,4 +1,6 @@
 ﻿
+using AppointmentSchedulerServer.Models;
+
 namespace AppointmentSchedulerServer.Repositories
 {
     public class SqlQueries
@@ -6,6 +8,8 @@ namespace AppointmentSchedulerServer.Repositories
         //tables
         private const string TABLE_ACCOUNTS = "Accounts";
         private const string TABLE_EMPLOYEES = "Employees";
+        private const string TABLE_ACCOUNT_APPOINTMENT = "Account_Appointment";
+        private const string TABLE_APPOINTMENT = "Appointment";
 
         //columns
         //Accounts
@@ -17,6 +21,9 @@ namespace AppointmentSchedulerServer.Repositories
         private const string COLUMN_FK_ACCOUNT_ID = "FK_Accounts_AccountID";
         private const string COLUMN_ROLE = "Role";
         private const string COLUMN_ROOM_NUMBER = "RoomNumber";
+        //Appointments
+        private const string COLUMN_APPOINTMENT_ID = "appointmentId";
+        private const string COLUMN_APPOINTMENT_ID_FK = "appointment_appointmentId_FK";
 
         //query strings
         //insertions
@@ -27,16 +34,21 @@ namespace AppointmentSchedulerServer.Repositories
         //selects
         public const string QUERY_SELECT_BY_EMAIL_AND_PASSWORD = "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE "
             + COLUMN_EMAIL + " = " + "@Email";
-        public const string FIND_ACCOUNT_BY_ID = "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE " + COLUMN_ACCOUNT_ID
+        public const string QUERY_FIND_ACCOUNT_BY_ID = "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE " + COLUMN_ACCOUNT_ID
             + " = " + "@Id";
-        public const string FIND_ACCOUNT_BY_EMAIL = "SELECT (Email) FROM " + TABLE_ACCOUNTS + " WHERE " + COLUMN_EMAIL
+        public const string QUERY_FIND_ACCOUNT_BY_EMAIL = "SELECT (Email) FROM " + TABLE_ACCOUNTS + " WHERE " + COLUMN_EMAIL
     + " = " + "@Email";
-        public const string SELECT_EVERYTHING_ACCOUNTS = "SELECT * FROM " + TABLE_ACCOUNTS;
+        public const string QUERY_SELECT_EVERYTHING_ACCOUNTS = "SELECT * FROM " + TABLE_ACCOUNTS;
 
         public const string QUERY_ROLE_OF_EMPLOYEE = "SELECT (Role) FROM " + TABLE_EMPLOYEES + " WHERE " + COLUMN_FK_ACCOUNT_ID
             + " = " + "@Id";
 
-        public const string FIND_EMPLOYEE_BY_ID = "SELECT * FROM " + TABLE_EMPLOYEES + " WHERE " + COLUMN_FK_ACCOUNT_ID
+        public const string QUERY_FIND_EMPLOYEE_BY_ID = "SELECT * FROM " + TABLE_EMPLOYEES + " WHERE " + COLUMN_FK_ACCOUNT_ID
         + " = " + "@Id";
+
+        //UNTESTED
+        public const string QUERY_FIND_APPOINTMENTS_BY_ACCOUNT_ID = "SELECT * FROM " + TABLE_ACCOUNT_APPOINTMENT + " t1 INNER JOIN " + TABLE_APPOINTMENT +
+             " ON " + COLUMN_APPOINTMENT_ID_FK + " = " + COLUMN_APPOINTMENT_ID + " WHERE " + COLUMN_APPOINTMENT_ID + " = @Id";
+
     }
 }

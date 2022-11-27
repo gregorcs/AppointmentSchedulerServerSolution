@@ -33,7 +33,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
         public async Task<bool> ExistsByEmail(EmployeeDTO entity)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            var result = await database.QueryFirstOrDefaultAsync<AccountDTO>(SqlQueries.FIND_ACCOUNT_BY_EMAIL, entity);
+            var result = await database.QueryFirstOrDefaultAsync<AccountDTO>(SqlQueries.QUERY_FIND_ACCOUNT_BY_EMAIL, entity);
             return result != null;
         }
 
@@ -58,7 +58,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             EmployeeDTO employeeFound;
             try
             {
-                employeeFound = await database.QueryFirstOrDefaultAsync<EmployeeDTO>(SqlQueries.FIND_EMPLOYEE_BY_ID, new { Id = id });
+                employeeFound = await database.QueryFirstOrDefaultAsync<EmployeeDTO>(SqlQueries.QUERY_FIND_EMPLOYEE_BY_ID, new { Id = id });
             }
             catch (Exception ex)
             {
