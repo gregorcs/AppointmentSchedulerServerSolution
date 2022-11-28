@@ -7,11 +7,11 @@ using System.Data;
 
 namespace AppointmentSchedulerServer.Repositories.Implementations
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeDAO : IEmployeeDAO
     {
         private readonly SqlServerDbConnectionFactory _sqlDbConnectionFactory;
 
-        public EmployeeRepository(SqlServerDbConnectionFactory sqlDbConnectionFactory)
+        public EmployeeDAO(SqlServerDbConnectionFactory sqlDbConnectionFactory)
         {
             _sqlDbConnectionFactory = sqlDbConnectionFactory;
         }
@@ -85,11 +85,11 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             catch (Exception ex)
             {
                 transaction.Rollback();
-                throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount, ex);
+                throw new DatabaseInsertionException(DALExceptionMessages.CouldNotSaveAccount, ex);
             }
 
             return createdId != 0 ? await FindById(createdId)
-                : throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount);
+                : throw new DatabaseInsertionException(DALExceptionMessages.CouldNotSaveAccount);
         }
 
         public Task<int> SaveAll(IEnumerable<EmployeeDTO> entities)

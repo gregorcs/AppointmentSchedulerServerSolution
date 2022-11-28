@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AppointmentSchedulerServerTests.Controller_Tests
 {
-    internal class MockEmployeeRepository : IEmployeeRepository
+    internal class MockEmployeeDAO : IEmployeeDAO
     {
         public Task Delete(EmployeeDTO entity)
         {

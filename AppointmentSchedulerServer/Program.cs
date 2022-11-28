@@ -11,9 +11,9 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSingleton(new SqlServerDbConnectionFactory("Server=hildur.ucn.dk;Database=CSC-CSD-S212_10407644;User Id=CSC-CSD-S212_10407644;Password=Password1!;"));
-builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
-builder.Services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
+builder.Services.AddSingleton<IAccountDAO, AccountDAO>();
+builder.Services.AddSingleton<IEmployeeDAO, EmployeeDAO>();
+builder.Services.AddSingleton<IAccountDAO, AccountDAO>();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

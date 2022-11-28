@@ -3,7 +3,7 @@ using AppointmentSchedulerServer.Models;
 
 namespace AppointmentSchedulerServer.Repositories
 {
-    public interface IAccountRepository : ICrudRepository<AccountDTO, long>
+    public interface IAccountDAO : ICrudDAO<AccountDTO, long>
     {
         public Task<long> ValidateAccountByEmailAndPassword(AccountDTO entity);
         public Task<bool> ExistsByEmail(AccountDTO entity);

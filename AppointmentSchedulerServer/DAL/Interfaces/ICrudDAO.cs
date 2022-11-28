@@ -1,6 +1,6 @@
 ﻿namespace AppointmentSchedulerServer.Repositories
 {
-    public interface ICrudRepository<T, ID>
+    public interface ICrudDAO<T, ID>
     {
         public Task<T> Save(T entity);
         public Task<int> SaveAll(IEnumerable<T> entities);

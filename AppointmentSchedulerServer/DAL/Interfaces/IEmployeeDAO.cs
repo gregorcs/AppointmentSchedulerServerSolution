@@ -2,7 +2,7 @@
 
 namespace AppointmentSchedulerServer.Repositories
 {
-    public interface IEmployeeRepository : ICrudRepository<EmployeeDTO, long>
+    public interface IEmployeeDAO : ICrudDAO<EmployeeDTO, long>
     {
         Task<bool> ExistsByEmail(EmployeeDTO entity);
     }

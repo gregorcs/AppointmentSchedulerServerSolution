@@ -3,7 +3,7 @@ using AppointmentSchedulerServer.Models;
 
 namespace AppointmentSchedulerServer.Repositories.Interfaces
 {
-    public interface IAppointmentRepository : ICrudRepository<AppointmentDTO, long>
+    public interface IAppointmentDAO : ICrudDAO<AppointmentDTO, long>
     {
         public Task<IEnumerable<AppointmentDTO>> FindAllByAccountId(long id);
 

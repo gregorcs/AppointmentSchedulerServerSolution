@@ -20,17 +20,17 @@ namespace AppointmentSchedulerServerTests.Controller_Tests
 
             AccountDTO AccountToSave = new AccountDTO("test", "abc@gmail.com", "abcd1234");
 
-            IEmployeeRepository MockEmployeeRepository = new MockEmployeeRepository();
+            IEmployeeDAO MockEmployeeDAO = new MockEmployeeDAO();
 
-            IAccountRepository MockAccountRepository = new MockAccountRepository();
-            var AccountController = new AccountController(MockAccountRepository, MockEmployeeRepository);
+            IAccountDAO MockAccountDAO = new MockAccountDAO();
+            var AccountController = new AccountController(MockAccountDAO, MockEmployeeDAO);
 
             //act
             AccountController.Post(AccountToSave);
 
             //assert
 
-            MockAccountRepository.ValidateAccountByEmailAndPassword(AccountToSave);
+            MockAccountDAO.ValidateAccountByEmailAndPassword(AccountToSave);
         }
     }
 }

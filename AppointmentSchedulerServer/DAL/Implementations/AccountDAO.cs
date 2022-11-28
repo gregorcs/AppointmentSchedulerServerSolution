@@ -7,11 +7,11 @@ using AppointmentSchedulerServer.Data_Transfer_Objects;
 
 namespace AppointmentSchedulerServer.Repositories
 {
-    public class AccountRepository : IAccountRepository
+    public class AccountDAO : IAccountDAO
     {
         private readonly SqlServerDbConnectionFactory _sqlDbConnectionFactory;
 
-        public AccountRepository(SqlServerDbConnectionFactory sqlDbConnectionFactory)
+        public AccountDAO(SqlServerDbConnectionFactory sqlDbConnectionFactory)
         {
             _sqlDbConnectionFactory = sqlDbConnectionFactory;
         }
@@ -91,11 +91,11 @@ namespace AppointmentSchedulerServer.Repositories
             }
             catch (Exception ex)
             {
-                throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount, ex);
+                throw new DatabaseInsertionException(DALExceptionMessages.CouldNotSaveAccount, ex);
             }
 
             return createdId != 0 ? await FindById(createdId)
-                : throw new DatabaseInsertionException(RepositoryExceptionMessages.CouldNotSaveAccount);
+                : throw new DatabaseInsertionException(DALExceptionMessages.CouldNotSaveAccount);
         }
 
         public Task<int> SaveAll(IEnumerable<AccountDTO> entities)

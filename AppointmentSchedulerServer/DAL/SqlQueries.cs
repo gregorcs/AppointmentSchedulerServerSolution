@@ -49,8 +49,13 @@ namespace AppointmentSchedulerServer.Repositories
         //UNTESTED
         public const string QUERY_FIND_APPOINTMENTS_BY_ACCOUNT_ID = "SELECT * FROM " + TABLE_ACCOUNT_APPOINTMENT + " t1 INNER JOIN " + TABLE_APPOINTMENT +
              " ON " + COLUMN_APPOINTMENT_ID_FK + " = " + COLUMN_APPOINTMENT_ID + " WHERE " + COLUMN_APPOINTMENT_ID + " = @Id";
+        
+        public const string QUERY_SAVE_APPOINTMENT = "";
+        public const string QUERY_SAVE_ACCOUNT_JOIN_APPOINTMENT = "";
+        public const string QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT = "";
 
         //todo save appointment
-/*        public const string QUERY_SAVE_APPOINTMENT = "INSERT INTO "
-*/    }
+        /*        public const string QUERY_SAVE_APPOINTMENT = "INSERT INTO "
+        */
+    }
 }

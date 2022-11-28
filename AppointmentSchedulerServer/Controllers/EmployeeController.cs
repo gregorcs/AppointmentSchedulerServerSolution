@@ -13,12 +13,12 @@ namespace AppointmentSchedulerServer.Controllers
     [Route("api/v1/[controller]/")]
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IEmployeeDAO _employeeDAO;
         private const string EmployeeRole = "Admin";
 
-        public EmployeeController(IEmployeeRepository employeeRepository)
+        public EmployeeController(IEmployeeDAO employeeDAO)
         {
-            _employeeRepository = employeeRepository;
+            _employeeDAO = employeeDAO;
         }
 
         [HttpPost]
@@ -30,13 +30,13 @@ namespace AppointmentSchedulerServer.Controllers
                 return BadRequest(ControllerErrorMessages.InvalidAccount);
             }
 
-            if (await _employeeRepository.ExistsByEmail(employee))
+            if (await _employeeDAO.ExistsByEmail(employee))
             {
                 return BadRequest(ControllerErrorMessages.InvalidEmail);
             }
             try
             {
-                var result = await _employeeRepository.Save(employee);
+                var result = await _employeeDAO.Save(employee);
                 return result != null ? Ok(result) : NotFound();
             }
             catch (Exception ex)

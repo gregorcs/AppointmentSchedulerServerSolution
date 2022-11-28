@@ -13,17 +13,17 @@ namespace AppointmentSchedulerServer.Controllers
     [Route("api/v1/[controller]/")]
     public class AccountController : Controller
     {
-        private readonly IAccountRepository _accountRepository;
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IAccountDAO _accountDAO;
+        private readonly IEmployeeDAO _employeeDAO;
 
         private const string EmployeeRole = "Admin";
         private const string UserRole = "User";
         private const string UserAndEmployeeRoles = UserRole + ", " + EmployeeRole;
 
-        public AccountController(IAccountRepository accountRepository, IEmployeeRepository employeeRepository)
+        public AccountController(IAccountDAO accountDAO, IEmployeeDAO employeeDAO)
         {
-            _accountRepository = accountRepository;
-            _employeeRepository = employeeRepository;
+            _accountDAO = accountDAO;
+            _employeeDAO = employeeDAO;
         }
 
         [HttpPost]
@@ -35,13 +35,13 @@ namespace AppointmentSchedulerServer.Controllers
                 return BadRequest(ControllerErrorMessages.InvalidAccount);
             }
 
-            if (await _accountRepository.ExistsByEmail(account))
+            if (await _accountDAO.ExistsByEmail(account))
             {
                 return BadRequest(ControllerErrorMessages.InvalidEmail);
             }
             try
             {
-                var result = await _accountRepository.Save(account);
+                var result = await _accountDAO.Save(account);
                 return result != null ? Ok(result) : NotFound();
             }
             catch (Exception ex)
@@ -57,8 +57,8 @@ namespace AppointmentSchedulerServer.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody] AccountDTO accountDTO)
         {
-            var accountIdFound = await _accountRepository.ValidateAccountByEmailAndPassword(accountDTO);
-            var employeeFound = await _employeeRepository.FindById(accountIdFound);
+            var accountIdFound = await _accountDAO.ValidateAccountByEmailAndPassword(accountDTO);
+            var employeeFound = await _employeeDAO.FindById(accountIdFound);
             if (accountIdFound > 0)
             {
                 return employeeFound == null 
@@ -73,7 +73,7 @@ namespace AppointmentSchedulerServer.Controllers
         [Authorize(Roles = EmployeeRole)]
         public async Task<IActionResult> GetById(int id)
         {
-            AccountDTO accountFound = await _accountRepository.FindById(id);
+            AccountDTO accountFound = await _accountDAO.FindById(id);
             return accountFound != null ? Ok(accountFound) : NotFound();
         }
 
@@ -94,7 +94,7 @@ namespace AppointmentSchedulerServer.Controllers
         [Authorize(Roles = EmployeeRole)]
         public async Task<IActionResult> FindAll()
         {
-            var result = await _accountRepository.FindAll();
+            var result = await _accountDAO.FindAll();
             return result != null ? Ok(result) : NotFound();
         }
     }

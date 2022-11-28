@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppointmentSchedulerServerTests.Repository_Tests
+namespace AppointmentSchedulerServerTests.DAL_Tests
 {
-    internal class EmployeeRepostioryTests
+    internal class EmployeeDALTests
     {
 
     }

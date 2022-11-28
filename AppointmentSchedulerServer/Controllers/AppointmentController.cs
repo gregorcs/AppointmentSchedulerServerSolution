@@ -11,17 +11,17 @@ namespace AppointmentSchedulerServer.Controllers
     [ApiController]
     public class AppointmentController : ControllerBase
     {
-        private readonly IAppointmentRepository _appointmentRepository;
+        private readonly IAppointmentDAO _appointmentDAO;
 
-        public AppointmentController(IAppointmentRepository appointmentRepository)
+        public AppointmentController(IAppointmentDAO appointmentDAO)
         {
-            _appointmentRepository = appointmentRepository;
+            _appointmentDAO = appointmentDAO;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> FindAllByAccountIdAsync(int id)
         {
-            var result = await _appointmentRepository.FindAllByAccountId(id);
+            var result = await _appointmentDAO.FindAllByAccountId(id);
             return result == null
                 ? BadRequest(ControllerErrorMessages.AppointmentError)
                 : Ok(result);
@@ -37,7 +37,7 @@ namespace AppointmentSchedulerServer.Controllers
         public async void Post([FromBody] AppointmentDTO appointmentDTO)
         {
 
-            var result = await _appointmentRepository.Save(appointmentDTO);
+            var result = await _appointmentDAO.Save(appointmentDTO);
         }
 
         [HttpPut("{id}")]

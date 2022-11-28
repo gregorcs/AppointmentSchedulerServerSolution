@@ -4,16 +4,17 @@ using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Repositories.Interfaces;
 using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections;
 using System.Data;
 
 namespace AppointmentSchedulerServer.Repositories.Implementations
 {
-    public class AppointmentRepository : IAppointmentRepository
+    public class AppointmentDao : IAppointmentDAO
     {
         private readonly SqlServerDbConnectionFactory _sqlDbConnectionFactory;
 
-        public AppointmentRepository(SqlServerDbConnectionFactory sqlDbConnectionFactory)
+        public AppointmentDao(SqlServerDbConnectionFactory sqlDbConnectionFactory)
         {
             _sqlDbConnectionFactory = sqlDbConnectionFactory;
         }
@@ -53,7 +54,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             }
             catch(Exception ex)
             {
-                throw new RetrievalFailedException(RepositoryExceptionMessages.AppointmentRetrievalFailed, ex);
+                throw new RetrievalFailedException(DALExceptionMessages.AppointmentRetrievalFailed, ex);
             }
             return appointmentsFound;
         }
@@ -68,18 +69,26 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             throw new NotImplementedException();
         }
 
-        public Task<AppointmentDTO> Save(AppointmentDTO entity)
+        public async Task<AppointmentDTO> Save([FromBody] AppointmentDTO entity)
         {
-            //Add to appointment
-            //Add to account_appointment
-            //for employee and also for appointment
             Appointment appointmentToSave = new(entity);
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using var transaction = database.BeginTransaction(IsolationLevel.ReadUncommitted);
             long createdId;
-/*            try
+            long createdAppointmentId;
+            try
             {
-                createdId = await database.QueryAsync<long>(SqlQueries.)
-            }*/
+                transaction.Connection?.Open();
+                createdAppointmentId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_APPOINTMENT, transaction);
+                await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_ACCOUNT_JOIN_APPOINTMENT, transaction);
+                await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT, transaction);
+                transaction.Commit();
+            } catch (Exception ex)
+            {
+                transaction?.Rollback();
+                //todo
+                Console.WriteLine(ex);
+            }
             throw new NotImplementedException();
         }
 

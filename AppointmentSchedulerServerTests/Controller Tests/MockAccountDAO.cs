@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AppointmentSchedulerServerTests.Controller_Tests
 {
-    internal class MockAccountRepository : IAccountRepository
+    internal class MockAccountDAO : IAccountDAO
     {
 
         private List<Account> Accounts = new List<Account>();
