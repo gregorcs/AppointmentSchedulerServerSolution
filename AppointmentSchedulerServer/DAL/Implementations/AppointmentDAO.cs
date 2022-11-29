@@ -72,6 +72,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
         public async Task<AppointmentDTO> Save([FromBody] AppointmentDTO entity)
         {
             Appointment appointmentToSave = new(entity);
+
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             using var transaction = database.BeginTransaction(IsolationLevel.ReadUncommitted);
             long createdId;

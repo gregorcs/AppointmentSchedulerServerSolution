@@ -57,8 +57,19 @@ namespace AppointmentSchedulerServer.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody] AccountDTO accountDTO)
         {
-            var accountIdFound = await _accountDAO.ValidateAccountByEmailAndPassword(accountDTO);
-            var employeeFound = await _employeeDAO.FindById(accountIdFound);
+            long accountIdFound;
+            EmployeeDTO employeeFound;
+            try
+            {
+                accountIdFound = await _accountDAO.ValidateAccountByEmailAndPassword(accountDTO);
+                employeeFound = await _employeeDAO.FindById(accountIdFound);
+            } catch (Exception ex)
+            {
+                //logger here
+                Console.WriteLine(ex);
+                return StatusCode(500, ControllerErrorMessages.CouldNotLogin);
+            }
+
             if (accountIdFound > 0)
             {
                 return employeeFound == null 
