@@ -2,13 +2,14 @@
 
 namespace AppointmentSchedulerServer.Data_Transfer_Objects
 {
-    public class AppointmentDTO
+    public class CreateAppointmentDTO
     {
         public int Id { get; set; }
         public DateTime Time { get; set; }
-        public bool IsAccepted { get; set; }
+        public int TimeSlot { get; set; }
+        public bool IsApproved { get; set; }
         public AppointmentType Type { get; set; }
-        public AccountDTO Account { get; set; }
-        public EmployeeDTO Employee { get; set; }
+        public AccountDTO CustomerAccount { get; set; }
+        public IEnumerable<EmployeeDTO> EmployeeList { get; set; }
     }
 }

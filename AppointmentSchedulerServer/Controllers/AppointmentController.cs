@@ -34,7 +34,7 @@ namespace AppointmentSchedulerServer.Controllers
         }
         //todo figure out how to get appointment, employee, account into controller -> repository
         [HttpPost]
-        public async void Post([FromBody] AppointmentDTO appointmentDTO)
+        public async void Post([FromBody] CreateAppointmentDTO appointmentDTO)
         {
 
             var result = await _appointmentDAO.Save(appointmentDTO);

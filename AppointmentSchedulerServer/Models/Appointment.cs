@@ -4,7 +4,7 @@ namespace AppointmentSchedulerServer.Models
 {
     public class Appointment
     {
-        public Appointment(AppointmentDTO entity)
+        public Appointment(CreateAppointmentDTO entity)
         {
             Id = entity.Id;
             Time = entity.Time;
