@@ -92,11 +92,12 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             database.Open();
             using var transaction = database.BeginTransaction(IsolationLevel.RepeatableRead);
-            long createdAppointmentId;
+            long createdAppointmentId = -1;
             try
             {
-                //handle edge cases for posting the same date twice
-                //handle exceptions in general
+                //todo handle edge cases for posting the same date twice
+                //todo handle exceptions in general
+                //todo handle find by id on return
                 createdAppointmentId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_APPOINTMENT, appointmentToSave, transaction);
                 
                 foreach(long EmployeeId in appointmentToSave.EmployeeIdList)
@@ -111,7 +112,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
                 //todo
                 Console.WriteLine(ex);
             }
-            throw new NotImplementedException();
+            return await FindById(createdAppointmentId);
         }
 
         public Task<int> SaveAll(IEnumerable<CreateAppointmentDTO> entities)
