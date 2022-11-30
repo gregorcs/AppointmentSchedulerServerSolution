@@ -24,12 +24,12 @@ namespace AppointmentSchedulerServer.Repositories
         public const string QUERY_FIND_APPOINTMENT_TYPE_BY_ID = "SELECT * FROM AppointmentTypes WHERE Id = @AppointmentTypeId";
 
         public const string QUERY_FIND_APPOINTMENTS_BY_EMPLOYEE_ID = "SELECT * FROM Appointments t1 INNER JOIN Employees_Appointments t2 ON t1.Id = t2.Appointments_Id" +
-            "WHERE t2.Accounts_Id = @EmployeeId";
+            " WHERE t2.Accounts_Id = @EmployeeId";
 
         public const string QUERY_FIND_APPOINTMENTS_BY_CUSTOMER_ID = "SELECT * FROM Appointments WHERE Accounts_Id = @CustomerId";
 
         public const string QUERY_SAVE_APPOINTMENT = "INSERT INTO Appointments(AppointmentTypes_Id, Accounts_Id, Date, TimeSlot, IsApproved) OUTPUT Inserted.Id" +
-            "VALUES (@AppointmentTypeId, @AccountId, @Date, @TimeSlot, @IsApproved)";
+            " VALUES (@AppointmentTypeId, @AccountId, @Date, @TimeSlot, @IsApproved)";
 
         public const string QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT = "INSERT INTO Employees_Appointments(Appointments_Id, Accounts_Id) VALUES (@AppointmentId, @EmployeeId)";
 

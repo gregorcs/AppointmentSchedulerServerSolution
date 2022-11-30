@@ -95,12 +95,13 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             long createdAppointmentId;
             try
             {
-                //transaction.Connection?.Open();
+                //handle edge cases for posting the same date twice
+                //handle exceptions in general
                 createdAppointmentId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_APPOINTMENT, appointmentToSave, transaction);
                 
-                foreach(int EmployeeId in appointmentToSave.EmployeeIdList)
+                foreach(long EmployeeId in appointmentToSave.EmployeeIdList)
                 {
-                    await database.ExecuteScalarAsync<object>(SqlQueries.QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT, new { employeeId = EmployeeId, appointmentId = appointmentToSave.AccountId });
+                    await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT, new { employeeId = EmployeeId, appointmentId = createdAppointmentId }, transaction);
                 }
 
                 transaction.Commit();
