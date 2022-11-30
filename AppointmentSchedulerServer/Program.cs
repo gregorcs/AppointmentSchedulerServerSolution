@@ -1,6 +1,7 @@
 using AppointmentSchedulerServer.DbConnections;
 using AppointmentSchedulerServer.Repositories;
 using AppointmentSchedulerServer.Repositories.Implementations;
+using AppointmentSchedulerServer.Repositories.Interfaces;
 using AppointmentSchedulerServerTests.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ builder.Services.AddSingleton(new SqlServerDbConnectionFactory("Server=hildur.uc
 builder.Services.AddSingleton<IAccountDAO, AccountDAO>();
 builder.Services.AddSingleton<IEmployeeDAO, EmployeeDAO>();
 builder.Services.AddSingleton<IAccountDAO, AccountDAO>();
+builder.Services.AddSingleton<IAppointmentDAO, AppointmentDAO>();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

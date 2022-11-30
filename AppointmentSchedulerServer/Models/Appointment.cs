@@ -1,4 +1,5 @@
 ﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using System.Collections;
 
 namespace AppointmentSchedulerServer.Models
 {
@@ -6,15 +7,19 @@ namespace AppointmentSchedulerServer.Models
     {
         public Appointment(CreateAppointmentDTO entity)
         {
-            Id = entity.Id;
-            Time = entity.Time;
-            IsAccepted = entity.IsAccepted;
-            Type = entity.Type;
+            AccountId = entity.Id;
+            Date = entity.Date;
+            IsApproved = entity.IsApproved;
+            TimeSlot = entity.TimeSlot;
+            AppointmentTypeId = entity.AppointmentTypeId;
+            EmployeeIdList = entity.EmployeeIdList;
         }
 
-        public int Id { get; set; }
-        public DateTime Time { get; set; }
-        public bool IsAccepted { get; set; }
-        public AppointmentType Type { get; set; }
+        public long AccountId { get; set; }
+        public DateTime Date { get; set; }
+        public int TimeSlot { get; set; }
+        public bool IsApproved { get; set; }
+        public long AppointmentTypeId { get; set; }
+        public ArrayList EmployeeIdList { get; set; }
     }
 }

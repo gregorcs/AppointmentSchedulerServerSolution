@@ -11,11 +11,11 @@ using System.Data;
 
 namespace AppointmentSchedulerServer.Repositories.Implementations
 {
-    public class AppointmentDao : IAppointmentDAO
+    public class AppointmentDAO : IAppointmentDAO
     {
         private readonly SqlServerDbConnectionFactory _sqlDbConnectionFactory;
 
-        public AppointmentDao(SqlServerDbConnectionFactory sqlDbConnectionFactory)
+        public AppointmentDAO(SqlServerDbConnectionFactory sqlDbConnectionFactory)
         {
             _sqlDbConnectionFactory = sqlDbConnectionFactory;
         }
@@ -90,15 +90,19 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             Appointment appointmentToSave = new(entity);
 
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            using var transaction = database.BeginTransaction(IsolationLevel.ReadUncommitted);
-            long createdId;
+            database.Open();
+            using var transaction = database.BeginTransaction(IsolationLevel.RepeatableRead);
             long createdAppointmentId;
             try
             {
-                transaction.Connection?.Open();
-                createdAppointmentId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_APPOINTMENT, transaction);
-                await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_ACCOUNT_JOIN_APPOINTMENT, transaction);
-                await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT, transaction);
+                //transaction.Connection?.Open();
+                createdAppointmentId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_APPOINTMENT, appointmentToSave, transaction);
+                
+                foreach(int EmployeeId in appointmentToSave.EmployeeIdList)
+                {
+                    await database.ExecuteScalarAsync<object>(SqlQueries.QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT, new { employeeId = EmployeeId, appointmentId = appointmentToSave.AccountId });
+                }
+
                 transaction.Commit();
             } catch (Exception ex)
             {
