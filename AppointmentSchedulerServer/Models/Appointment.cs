@@ -7,7 +7,7 @@ namespace AppointmentSchedulerServer.Models
     {
         public Appointment(CreateAppointmentDTO entity)
         {
-            AccountId = entity.Id;
+            AccountId = entity.CustomerId;
             Date = entity.Date;
             IsApproved = entity.IsApproved;
             TimeSlot = entity.TimeSlot;
