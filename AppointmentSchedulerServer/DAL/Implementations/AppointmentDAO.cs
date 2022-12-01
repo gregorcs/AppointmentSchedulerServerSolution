@@ -80,9 +80,19 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             throw new NotImplementedException();
         }
 
-        public Task<CreateAppointmentDTO> FindById(long id)
+        public async Task<CreateAppointmentDTO> FindById(long id)
         {
-            throw new NotImplementedException();
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            CreateAppointmentDTO appointmentFound;
+            try
+            {
+                appointmentFound = await database.QueryFirstAsync<CreateAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENT_BY_ID, new {Id = id});
+            }
+            catch (Exception ex)
+            {
+                throw new RetrievalFailedException(DALExceptionMessages.SingleAppointmentRetrievalFailed, ex);
+            }
+            return appointmentFound;
         }
 
         public async Task<CreateAppointmentDTO> Save([FromBody] CreateAppointmentDTO entity)
@@ -109,8 +119,8 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             } catch (Exception ex)
             {
                 transaction?.Rollback();
-                //todo
                 Console.WriteLine(ex);
+                throw new DatabaseInsertionException(DALExceptionMessages.CouldNotSaveAppointment, ex);
             }
             return await FindById(createdAppointmentId);
         }

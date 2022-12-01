@@ -34,7 +34,7 @@ namespace AppointmentSchedulerServer.Repositories
         public const string QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT = "INSERT INTO Employees_Appointments(Appointments_Id, Accounts_Id) VALUES (@AppointmentId, @EmployeeId)";
 
         public const string QUERY_SELECT_TIMESLOT_BY_DATE = "SELECT TimeSlot FROM Appointments WHERE Date = @Date";
-
+        public const string QUERY_FIND_APPOINTMENT_BY_ID = "SELECT * FROM Appointments WHERE Id = @Id";
 
     }
 }

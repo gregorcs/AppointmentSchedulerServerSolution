@@ -1,4 +1,5 @@
 ﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Repositories;
@@ -34,10 +35,21 @@ namespace AppointmentSchedulerServer.Controllers
         }
         //todo figure out how to get appointment, employee, account into controller -> repository
         [HttpPost]
-        public async void Post([FromBody] CreateAppointmentDTO appointmentDTO)
+        public async Task<IActionResult> Post([FromBody] CreateAppointmentDTO appointmentDTO)
         {
-
-            var result = await _appointmentDAO.Save(appointmentDTO);
+            CreateAppointmentDTO result;
+            if (appointmentDTO == null)
+            {
+                return BadRequest(ControllerErrorMessages.InvalidAppointment);
+            }
+            try
+            {
+                result = await _appointmentDAO.Save(appointmentDTO);
+            } catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
