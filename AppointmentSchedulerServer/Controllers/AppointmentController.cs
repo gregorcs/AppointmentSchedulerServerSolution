@@ -4,6 +4,7 @@ using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Repositories;
 using AppointmentSchedulerServer.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppointmentSchedulerServer.Controllers
@@ -13,6 +14,11 @@ namespace AppointmentSchedulerServer.Controllers
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentDAO _appointmentDAO;
+
+        //todo move these to config, since they are used in multiple controllers
+        private const string EmployeeRole = "Admin";
+        private const string UserRole = "User";
+        private const string UserAndEmployeeRoles = UserRole + ", " + EmployeeRole;
 
         public AppointmentController(IAppointmentDAO appointmentDAO)
         {
@@ -35,6 +41,7 @@ namespace AppointmentSchedulerServer.Controllers
         }
         //todo figure out how to get appointment, employee, account into controller -> repository
         [HttpPost]
+        [Authorize(Roles = UserAndEmployeeRoles)]
         public async Task<IActionResult> Post([FromBody] CreateAppointmentDTO appointmentDTO)
         {
             CreateAppointmentDTO result;
