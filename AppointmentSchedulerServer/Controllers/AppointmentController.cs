@@ -25,7 +25,7 @@ namespace AppointmentSchedulerServer.Controllers
             _appointmentDAO = appointmentDAO;
         }
 
-        [HttpGet]
+        [HttpGet("/customer/{id}")]
         public async Task<ActionResult<IEnumerable<Appointment>>> FindAllByAccountIdAsync(int id)
         {
             var result = await _appointmentDAO.FindAllByAccountId(id);
@@ -34,11 +34,22 @@ namespace AppointmentSchedulerServer.Controllers
                 : Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("/employee/{id}")]
+        public async Task<ActionResult<IEnumerable<Appointment>>> FindAllByEmployeeIdAsync(int id)
+        {
+            var result = await _appointmentDAO.FindAllByEmployeeId(id);
+            return result == null
+                ? BadRequest(ControllerErrorMessages.AppointmentError)
+                : Ok(result);
+        }
+
+        /*[HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
-        }
+        }*/
+
+
         //todo figure out how to get appointment, employee, account into controller -> repository
         [HttpPost]
         [Authorize(Roles = UserAndEmployeeRoles)]

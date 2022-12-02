@@ -14,6 +14,10 @@ namespace AppointmentSchedulerServer.DataTransferObjects
         public string Description { get; set; }
         public ArrayList EmployeeNameList { get; set; }
 
+        public GetAppointmentDTO()
+        {
+
+        }
 
         public GetAppointmentDTO(long id, DateTime time, int timeSlot, bool isApproved, string name, string description)
         {
