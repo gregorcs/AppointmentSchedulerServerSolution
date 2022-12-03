@@ -78,7 +78,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             try
             {
                 createdId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_ACCOUNT, employeeToSave, transaction);
-                employeeToSave.PK_AccountId = createdId;
+                employeeToSave.Id = createdId;
                 await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_EMPLOYEE, employeeToSave, transaction);
                 transaction.Commit();
             }

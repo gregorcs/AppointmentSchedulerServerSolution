@@ -76,7 +76,7 @@ namespace AppointmentSchedulerServer.Controllers
                     ? Ok(new {Role = "User", JwtToken = JWTHandler.CreateUserToken(accountDTO) }) 
                     : Ok(new {Role = "Admin" , JwtToken = JWTHandler.CreateAdminToken(accountDTO) });
             }
-            return BadRequest();
+            return BadRequest("There has a problem finding your account");
         }
 
         [HttpGet]

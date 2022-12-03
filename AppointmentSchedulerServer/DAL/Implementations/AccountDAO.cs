@@ -45,7 +45,7 @@ namespace AppointmentSchedulerServer.Repositories
                 && (BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, accountFound.Password)
                 && entity.Email.Equals(accountFound.Email)))
             {
-                return accountFound.PK_AccountId;
+                return accountFound.Id;
             } else
             {
                 return 0;
