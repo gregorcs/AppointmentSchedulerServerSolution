@@ -47,5 +47,11 @@ namespace AppointmentSchedulerServer.Controllers
                 return StatusCode(500, ControllerErrorMessages.EncounteredError);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAllAppointmentTypes()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

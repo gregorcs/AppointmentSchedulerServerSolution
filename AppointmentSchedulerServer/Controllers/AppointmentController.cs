@@ -79,5 +79,11 @@ namespace AppointmentSchedulerServer.Controllers
         public void Delete(int id)
         {
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAvailableTimeSlots(DateTime dateOfAppointment)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

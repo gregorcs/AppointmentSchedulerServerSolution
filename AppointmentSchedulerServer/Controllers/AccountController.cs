@@ -72,9 +72,10 @@ namespace AppointmentSchedulerServer.Controllers
 
             if (accountIdFound > 0)
             {
-                return employeeFound == null 
-                    ? Ok(new {Role = "User", JwtToken = JWTHandler.CreateUserToken(accountDTO) }) 
-                    : Ok(new {Role = "Admin" , JwtToken = JWTHandler.CreateAdminToken(accountDTO) });
+                var result = employeeFound == null
+                    ? Ok(new { Role = "User", JwtToken = JWTHandler.CreateUserToken(accountDTO), Id = accountIdFound })
+                    : Ok(new { Role = "Admin", JwtToken = JWTHandler.CreateAdminToken(accountDTO), Id = accountIdFound });
+                return result;
             }
             return BadRequest("There has a problem finding your account");
         }
