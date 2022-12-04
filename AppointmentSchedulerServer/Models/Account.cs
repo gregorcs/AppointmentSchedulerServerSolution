@@ -21,7 +21,7 @@ namespace AppointmentSchedulerServer.Models
             Password = password;
             Email = email;
         }
-        public Account(string username, string password, string email, ArrayList appointments)
+        public Account(string username, string password, string email, IEnumerable<int> appointments)
         {
             Username = username;
             Password = password;
@@ -33,6 +33,6 @@ namespace AppointmentSchedulerServer.Models
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
-        public ArrayList Appointments { get; set; }
+        public IEnumerable<int> Appointments { get; set; }
     }
 }

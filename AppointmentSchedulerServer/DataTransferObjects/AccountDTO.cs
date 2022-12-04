@@ -8,9 +8,9 @@ namespace AppointmentSchedulerServer.Data_Transfer_Objects
         public string? Username { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public ArrayList? Appointments { get; set; }
+        public IEnumerable<int>? Appointments { get; set; }
 
-        public AccountDTO(string username, string email, string password, ArrayList appointments)
+        public AccountDTO(string username, string email, string password, IEnumerable<int> appointments)
         {
             Username = username;
             Email = email;

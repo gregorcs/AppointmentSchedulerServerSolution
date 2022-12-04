@@ -81,9 +81,23 @@ namespace AppointmentSchedulerServer.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAvailableTimeSlots(DateTime dateOfAppointment)
+        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployeesAndAvailableTimeSlots(DateTime dateOfAppointment)
         {
-            throw new NotImplementedException();
+            IEnumerable<EmployeeDTO> result;
+
+            if (dateOfAppointment == null)
+            {
+                return BadRequest(ControllerErrorMessages.InvalidAppointment);
+            }
+            try
+            {
+                 result = await _appointmentDAO.FindAllEmployeesAndAvailableTimeSlots(dateOfAppointment);
+            } catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500);
+            }
+            return Ok(result);
         }
     }
 }

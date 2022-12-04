@@ -5,7 +5,7 @@ namespace AppointmentSchedulerServer.Data_Transfer_Objects
 {
     public class EmployeeDTO : AccountDTO
     {
-        public long Id { get; set; }
+        public long Accounts_Id { get; set; }
         public string Role { get; set; }
         public int RoomNumber { get; set; }
 
@@ -15,12 +15,12 @@ namespace AppointmentSchedulerServer.Data_Transfer_Objects
 
         public EmployeeDTO(long id, string role, int roomNumber)
         {
-            Id = id;
+            Accounts_Id = id;
             Role = role;
             RoomNumber = roomNumber;
         }
 
-        public EmployeeDTO(string username, string email, string password, string role, int roomNumber, ArrayList appointments)
+        public EmployeeDTO(string username, string email, string password, string role, int roomNumber, IEnumerable<int> appointments)
             : base(username, email, password, appointments)
         {
             Role = role;
