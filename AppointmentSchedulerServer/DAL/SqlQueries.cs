@@ -36,10 +36,11 @@ namespace AppointmentSchedulerServer.Repositories
         public const string QUERY_SELECT_TIMESLOT_BY_DATE = "SELECT TimeSlot FROM Appointments WHERE Date = @Date";
         public const string QUERY_FIND_APPOINTMENT_BY_ID = "SELECT * FROM Appointments WHERE Id = @Id";
 
-        public const string QUERY_FIND_ALL_EMPLOYEES_AND_TIMESLOTS_BY_DATE = "SELECT t2.Accounts_Id, t1.Username, t2.RoomNumber, t3.Date, t3.TimeSlot FROM Accounts t1 " +
-                                                        "INNER JOIN Employees t2 ON t1.Id = t2.Accounts_Id " +
-                                                        "INNER JOIN Appointments t3 ON t2.Accounts_Id = t3.Accounts_Id " +
-                                                        "WHERE t3.Date = @Date";
+        public const string QUERY_FIND_ALL_EMPLOYEES_AND_TIMESLOTS_BY_DATE = "SELECT t2.Accounts_Id, t1.Username, t2.RoomNumber FROM Accounts t1 " +
+                                                                                "INNER JOIN Employees t2 ON t1.Id = t2.Accounts_Id " +
+                                                                                "INNER JOIN Appointments t3 ON t2.Accounts_Id = t3.Accounts_Id " +
+                                                                                "WHERE t3.Date = @Date " +
+                                                                                "GROUP BY t2.Accounts_Id, t2.RoomNumber, t1.Username";
 
         public const string QUERY_FIND_UNAVAILABLE_TIMESLOTS_BY_EMPLOYE_AND_DATE = "SELECT t3.TimeSlot FROM Accounts t1 " +
                                                                             "INNER JOIN Employees t2 ON t1.Id = t2.Accounts_Id " +

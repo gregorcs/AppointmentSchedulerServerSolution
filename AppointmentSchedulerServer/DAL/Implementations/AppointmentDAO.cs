@@ -133,7 +133,6 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
                     employee.Appointments = availableHours;
                     continue;
                 }
-                
             }
             return employees;
         }
