@@ -14,9 +14,9 @@ namespace AppointmentSchedulerServer.Models
             Username = account.Username;
             Appointments = account.Appointments;
         }
-        public Account(long pk_AccountId, string username, string password, string email)
+        public Account(long id, string username, string password, string email)
         {
-            Id = pk_AccountId;
+            Id = id;
             Username = username;
             Password = password;
             Email = email;
