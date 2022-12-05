@@ -43,11 +43,14 @@ namespace AppointmentSchedulerServer.Controllers
                 : Ok(result);
         }
 
-        /*[HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GetAppointmentDTO>> FindById(int id)
         {
-            return "value";
-        }*/
+            var result = await _appointmentDAO.FindById(id);
+            return result == null
+                ? BadRequest(ControllerErrorMessages.AppointmentError)
+                : Ok(result);
+        }
 
 
         //todo figure out how to get appointment, employee, account into controller -> repository
