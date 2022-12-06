@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AppointmentSchedulerServer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AppointmentController : ControllerBase
     {
@@ -80,7 +80,8 @@ namespace AppointmentSchedulerServer.Controllers
         {
         }
 
-        [HttpGet]
+        [HttpGet("{dateOfAppointment}")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployeesAndAvailableTimeSlots(DateTime dateOfAppointment)
         {
             IEnumerable<EmployeeDTO> result;
