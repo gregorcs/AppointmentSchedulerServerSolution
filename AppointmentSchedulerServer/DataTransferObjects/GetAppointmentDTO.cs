@@ -10,6 +10,8 @@ namespace AppointmentSchedulerServer.DataTransferObjects
         public DateTime Time { get; set; }
         public int TimeSlot { get; set; }
         public bool IsApproved { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public ArrayList EmployeeNameList { get; set; }
@@ -19,7 +21,7 @@ namespace AppointmentSchedulerServer.DataTransferObjects
 
         }
 
-        public GetAppointmentDTO(long id, DateTime time, int timeSlot, bool isApproved, string name, string description)
+        public GetAppointmentDTO(long id, DateTime time, int timeSlot, bool isApproved, string name, string description, string email, string username)
         {
             Id = id;
             Time = time;
@@ -27,7 +29,9 @@ namespace AppointmentSchedulerServer.DataTransferObjects
             IsApproved = isApproved;
             Name = name;
             Description = description;
-            EmployeeNameList = new ArrayList(); 
+            EmployeeNameList = new ArrayList();
+            Username = username;
+            Email = email;
         }
     }
 }
