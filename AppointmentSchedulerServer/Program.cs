@@ -16,6 +16,7 @@ builder.Services.AddSingleton<IAccountDAO, AccountDAO>();
 builder.Services.AddSingleton<IEmployeeDAO, EmployeeDAO>();
 builder.Services.AddSingleton<IAccountDAO, AccountDAO>();
 builder.Services.AddSingleton<IAppointmentDAO, AppointmentDAO>();
+builder.Services.AddSingleton<IEmployeeDAO, EmployeeDAO>();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

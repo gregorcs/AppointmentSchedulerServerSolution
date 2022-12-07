@@ -1,4 +1,5 @@
 ﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
 using AppointmentSchedulerServer.Repositories;

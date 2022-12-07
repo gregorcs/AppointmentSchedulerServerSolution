@@ -1,4 +1,5 @@
 ﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.DbConnections;
 using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
@@ -65,6 +66,21 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
                 throw new NotFoundException("Search of the specified account failed", ex);
             }
             return employeeFound;
+        }
+
+        public async Task<IEnumerable<GetEmployeeDTO>> GetEmployeeByAppointmentType(long id)
+        {
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            IEnumerable<GetEmployeeDTO> employeesFound;
+            try
+            {
+                employeesFound = await database.QueryAsync<GetEmployeeDTO>(SqlQueries.QUERY_FIND_EMPLOYEE_BY_APPOINTMENT_TYPE, new {AppointmentTypes_Id = id});
+            }
+            catch (Exception ex)
+            {
+                throw new NotFoundException("Search by appointment type failed.", ex);
+            }
+            return employeesFound;
         }
 
         public async Task<EmployeeDTO> Save(EmployeeDTO entity)

@@ -186,5 +186,20 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
         {
             throw new NotImplementedException();
         }
+
+        public async Task<IEnumerable<AppointmentTypeDTO>> GetAllAppointmentTypes()
+        {
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            IEnumerable<AppointmentTypeDTO> appointmentTypesFound;
+            try
+            {
+                appointmentTypesFound = await database.QueryAsync<AppointmentTypeDTO>(SqlQueries.QUERY_FIND_ALL_APPOINTMENT_TYPES);
+            }
+            catch (Exception ex)
+            {
+                throw new RetrievalFailedException(DALExceptionMessages.SingleAppointmentRetrievalFailed, ex);
+            }
+            return appointmentTypesFound;
+        }
     }
 }

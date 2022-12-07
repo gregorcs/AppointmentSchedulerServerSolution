@@ -46,5 +46,11 @@ namespace AppointmentSchedulerServer.Repositories
                                                                             "INNER JOIN Employees t2 ON t1.Id = t2.Accounts_Id " +
                                                                             "INNER JOIN Appointments t3 ON t2.Accounts_Id = t3.Accounts_Id " +
                                                                             "WHERE t3.Date = @Date AND t2.Accounts_Id = @Id;";
+
+        public const string QUERY_FIND_ALL_APPOINTMENT_TYPES = "SELECT * FROM AppointmentTypes";
+
+        public const string QUERY_FIND_EMPLOYEE_BY_APPOINTMENT_TYPE = "SELECT Username, t1.Accounts_Id, Email, RoomNumber, Role FROM Employees t1 INNER JOIN Accounts t2 ON t1.Accounts_Id = t2.Id " +
+                                                                        "INNER JOIN Employees_AppointmentTypes t3 ON t1.Accounts_Id = t3.Accounts_Id " +
+                                                                        "WHERE t3.AppointmentTypes_Id = @AppointmentTypes_Id";
     }
 }
