@@ -11,6 +11,6 @@ namespace AppointmentSchedulerServer.Data_Transfer_Objects
         public int TimeSlot { get; set; }
         public bool IsApproved { get; set; }
         public long AppointmentTypeId { get; set; }
-        public IEnumerable<long> EmployeeIdList { get; set; }
+        public IEnumerable<long>? EmployeeIdList { get; set; }
     }
 }

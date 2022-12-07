@@ -60,13 +60,13 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             return appointmentsFound;
         }
 
-        public async Task<IEnumerable<GetAppointmentDTO>> FindAllByEmployeeId(long id)
+        public async Task<IEnumerable<GetAppointmentDTO>> FindAllByEmployeeId(long Id)
         {
             IEnumerable<GetAppointmentDTO> appointmentsFound;
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             try
             {
-                appointmentsFound = await database.QueryAsync<GetAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_EMPLOYEE_ID, id);
+                appointmentsFound = await database.QueryAsync<GetAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_EMPLOYEE_ID, new { Id });
             }
             catch (Exception ex)
             {
@@ -86,11 +86,13 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             IEnumerable<EmployeeDTO> employeesFound;
             try
             {
+                //try to find unavailable list here
                 employeesFound = await database.QueryAsync<EmployeeDTO>(SqlQueries.QUERY_FIND_ALL_EMPLOYEES_AND_TIMESLOTS_BY_DATE, dateOfAppointment);
                 foreach (EmployeeDTO employee in employeesFound)
                 {
                     employee.Appointments = await database.QueryAsync<int>(SqlQueries.QUERY_FIND_UNAVAILABLE_TIMESLOTS_BY_EMPLOYE_AND_DATE, new { Date = dateOfAppointment, Id = employee.Accounts_Id });
                 }
+                //if eve
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
