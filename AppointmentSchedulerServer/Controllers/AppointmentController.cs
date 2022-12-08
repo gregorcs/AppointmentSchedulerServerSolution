@@ -1,6 +1,5 @@
-﻿using AppointmentSchedulerServer.DAL.Interfaces;
+﻿using AppointmentSchedulerServer.BusinessLogicLayer.Interfaces;
 using AppointmentSchedulerServer.DataTransferObjects;
-using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,65 +10,36 @@ namespace AppointmentSchedulerServer.Controllers
     [ApiController]
     public class AppointmentController : ControllerBase
     {
-        private readonly IAppointmentDAO _appointmentDAO;
-        private readonly IEmployeeDAO _employeeDAO;
-
+        private readonly IAppointmentBLL _appointmentBLL;
 
         //todo move these to config, since they are used in multiple controllers
         private const string EmployeeRole = "Admin";
         private const string UserRole = "User";
         private const string UserAndEmployeeRoles = UserRole + ", " + EmployeeRole;
 
-        public AppointmentController(IAppointmentDAO appointmentDAO, IEmployeeDAO employeeDAO)
+        public AppointmentController(IAppointmentBLL appointmentBLL)
         {
-            _appointmentDAO = appointmentDAO;
-            _employeeDAO = employeeDAO;
+            _appointmentBLL = appointmentBLL;
         }
 
         [HttpGet("customer/{id}")]
         public async Task<ActionResult<IEnumerable<Appointment>>> FindAllByAccountIdAsync(int id)
         {
-            var result = await _appointmentDAO.FindAllByAccountId(id);
-            return result == null
-                ? BadRequest(ControllerErrorMessages.AppointmentError)
-                : Ok(result);
+            return await _appointmentBLL.FindAllByAccountIdAsync(id);
         }
 
         [HttpGet("employee/{id}")]
         public async Task<ActionResult<IEnumerable<Appointment>>> FindAllByEmployeeIdAsync(int id)
         {
-            var result = await _appointmentDAO.FindAllByEmployeeId(id);
-            return result == null
-                ? BadRequest(ControllerErrorMessages.AppointmentError)
-                : Ok(result);
+            return await _appointmentBLL.FindAllByEmployeeIdAsync(id);
         }
-
-        /*[HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }*/
-
 
         //todo figure out how to get appointment, employee, account into controller -> repository
         [HttpPost]
         [Authorize(Roles = UserAndEmployeeRoles)]
         public async Task<IActionResult> Post([FromBody] CreateAppointmentDTO appointmentDTO)
         {
-            CreateAppointmentDTO result;
-            if (appointmentDTO == null)
-            {
-                return BadRequest(ControllerErrorMessages.InvalidAppointment);
-            }
-            try
-            {
-                result = await _appointmentDAO.Save(appointmentDTO);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-            return Ok(result);
+            return await _appointmentBLL.Save(appointmentDTO);
         }
 
         [HttpPut("{id}")]
@@ -86,22 +56,7 @@ namespace AppointmentSchedulerServer.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployeesAndAvailableTimeSlots(DateTime dateOfAppointment)
         {
-            IEnumerable<EmployeeDTO> result;
-
-            if (dateOfAppointment == null)
-            {
-                return BadRequest(ControllerErrorMessages.InvalidAppointment);
-            }
-            try
-            {
-                result = await _appointmentDAO.FindAllEmployeesAndAvailableTimeSlots(dateOfAppointment);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
-            }
-            return Ok(result);
+            return await _appointmentBLL.GetAllEmployeesAndAvailableTimeSlots(dateOfAppointment);
         }
 
         [HttpGet]
@@ -109,18 +64,7 @@ namespace AppointmentSchedulerServer.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<AppointmentTypeDTO>>> GetAllAppointmentTypes()
         {
-            IEnumerable<AppointmentTypeDTO> result;
-
-            try
-            {
-                result = await _appointmentDAO.GetAllAppointmentTypes();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
-            }
-            return Ok(result);
+            return await _appointmentBLL.GetAllAppointmentTypes();
         }
 
         [HttpGet]
@@ -128,18 +72,7 @@ namespace AppointmentSchedulerServer.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<GetEmployeeDTO>>> GetEmployeeByAppointmentType(long id)
         {
-            IEnumerable<GetEmployeeDTO> result;
-
-            try
-            {
-                result = await _employeeDAO.GetEmployeeByAppointmentType(id);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
-            }
-            return Ok(result);
+            return await _appointmentBLL.GetEmployeeByAppointmentType(id);
         }
     }
 }
