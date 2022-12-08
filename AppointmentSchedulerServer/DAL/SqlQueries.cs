@@ -6,7 +6,7 @@
         //insertions
         public const string QUERY_SAVE_ACCOUNT = "INSERT INTO Accounts (Username, Password, Email) OUTPUT Inserted.Id VALUES (@Username, @Password, @Email)";
         public const string QUERY_SAVE_EMPLOYEE = "INSERT INTO Employees ( Accounts_Id, Role, RoomNumber) " +
-                                                    "OUTPUT Inserted.Accounts_Id VALUES (@PK_AccountId, @Role, @RoomNumber)";
+                                                    "OUTPUT Inserted.Accounts_Id VALUES (@Id, @Role, @RoomNumber)";
         //selects
         public const string QUERY_SELECT_BY_EMAIL_AND_PASSWORD = "SELECT * FROM Accounts WHERE Email = @Email";
         public const string QUERY_FIND_ACCOUNT_BY_ID = "SELECT * FROM Accounts WHERE Id = @Id";
