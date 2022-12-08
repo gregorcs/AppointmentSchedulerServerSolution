@@ -22,6 +22,7 @@ builder.Services.AddSingleton<IEmployeeDAO, EmployeeDAO>();
 //business logic layer injection
 builder.Services.AddSingleton<IAccountBLL, AccountBLL>();
 builder.Services.AddSingleton<IAppointmentBLL, AppointmentBLL>();
+builder.Services.AddSingleton<IEmployeeBLL, EmployeeBLL>();
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

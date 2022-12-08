@@ -165,6 +165,8 @@ namespace AppointmentSchedulerServer.DAL.Implementations
                 //todo handle edge cases for posting the same date twice
                 //todo handle exceptions in general
                 //todo handle find by id on return
+
+                //select * from appointments inner join employees
                 createdAppointmentId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_APPOINTMENT, appointmentToSave, transaction);
 
                 foreach (long EmployeeId in appointmentToSave.EmployeeIdList)

@@ -1,6 +1,5 @@
-﻿using AppointmentSchedulerServer.DAL.Interfaces;
+﻿using AppointmentSchedulerServer.BusinessLogicLayer.Implementation;
 using AppointmentSchedulerServer.DataTransferObjects;
-using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,39 +11,18 @@ namespace AppointmentSchedulerServer.Controllers
     [Route("api/v1/[controller]/")]
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeDAO _employeeDAO;
+        private readonly IEmployeeBLL _employeeBLL;
         private const string EmployeeRole = "Admin";
-
-        public EmployeeController(IEmployeeDAO employeeDAO)
+        public EmployeeController(IEmployeeBLL employeeBLL)
         {
-            _employeeDAO = employeeDAO;
+            _employeeBLL = employeeBLL;
         }
 
         [HttpPost]
         [Authorize(Roles = EmployeeRole)]
         public async Task<ActionResult<Employee>> Post(EmployeeDTO employee)
         {
-            if (employee is null)
-            {
-                return BadRequest(ControllerErrorMessages.InvalidAccount);
-            }
-
-            if (await _employeeDAO.ExistsByEmail(employee))
-            {
-                return BadRequest(ControllerErrorMessages.InvalidEmail);
-            }
-            try
-            {
-                var result = await _employeeDAO.Save(employee);
-                return result != null ? Ok(result) : NotFound();
-            }
-            catch (Exception ex)
-            {
-                //i CW the exception since we are not implementing
-                //a logger and i wanna see if there are any exceptions
-                Console.WriteLine(ex);
-                return StatusCode(500, ControllerErrorMessages.EncounteredError);
-            }
+            return await _employeeBLL.Save(employee);
         }
 
         [HttpGet]
