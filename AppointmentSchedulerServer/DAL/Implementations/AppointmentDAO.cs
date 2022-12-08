@@ -1,15 +1,14 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+﻿using AppointmentSchedulerServer.DAL;
+using AppointmentSchedulerServer.DAL.Interfaces;
 using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.DbConnections;
 using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
-using AppointmentSchedulerServer.Repositories.Interfaces;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections;
 using System.Data;
 
-namespace AppointmentSchedulerServer.Repositories.Implementations
+namespace AppointmentSchedulerServer.DAL.Implementations
 {
     public class AppointmentDAO : IAppointmentDAO
     {
@@ -53,7 +52,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             {
                 appointmentsFound = await database.QueryAsync<GetAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_CUSTOMER_ID, id);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new RetrievalFailedException(DALExceptionMessages.AppointmentRetrievalFailed, ex);
             }
@@ -92,8 +91,8 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
                 {
                     employee.Appointments = await database.QueryAsync<int>(SqlQueries.QUERY_FIND_UNAVAILABLE_TIMESLOTS_BY_EMPLOYE_AND_DATE, new { Date = dateOfAppointment, Id = employee.Accounts_Id });
                 }
-                //if eve
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 throw new QueryOfEmployeesFailedExceptions(DALExceptionMessages.CouldNotQueryEmployees, ex);
@@ -107,7 +106,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             //hardcoded but could be moved to DB layer
             const int startingHour = 7;
             const int finishingHour = 17;
-            foreach(EmployeeDTO employee in employees)
+            foreach (EmployeeDTO employee in employees)
             {
                 ICollection<int> availableHours = new List<int>();
                 //no unavailable hours found for this employee
@@ -145,7 +144,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             CreateAppointmentDTO appointmentFound;
             try
             {
-                appointmentFound = await database.QueryFirstAsync<CreateAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENT_BY_ID, new {Id = id});
+                appointmentFound = await database.QueryFirstAsync<CreateAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENT_BY_ID, new { Id = id });
             }
             catch (Exception ex)
             {
@@ -168,14 +167,15 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
                 //todo handle exceptions in general
                 //todo handle find by id on return
                 createdAppointmentId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_APPOINTMENT, appointmentToSave, transaction);
-                
-                foreach(long EmployeeId in appointmentToSave.EmployeeIdList)
+
+                foreach (long EmployeeId in appointmentToSave.EmployeeIdList)
                 {
                     await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT, new { employeeId = EmployeeId, appointmentId = createdAppointmentId }, transaction);
                 }
 
                 transaction.Commit();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 transaction?.Rollback();
                 Console.WriteLine(ex);

@@ -1,9 +1,9 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+﻿using AppointmentSchedulerServer.DataTransferObjects;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace AppointmentSchedulerServerTests.JWT
+namespace AppointmentSchedulerServer.JWT
 {
     public class JWTHandler
     {

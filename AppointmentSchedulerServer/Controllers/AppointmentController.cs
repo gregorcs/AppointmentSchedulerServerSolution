@@ -1,9 +1,7 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+﻿using AppointmentSchedulerServer.DAL.Interfaces;
 using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
-using AppointmentSchedulerServer.Repositories;
-using AppointmentSchedulerServer.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -66,7 +64,8 @@ namespace AppointmentSchedulerServer.Controllers
             try
             {
                 result = await _appointmentDAO.Save(appointmentDTO);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
@@ -95,8 +94,9 @@ namespace AppointmentSchedulerServer.Controllers
             }
             try
             {
-                 result = await _appointmentDAO.FindAllEmployeesAndAvailableTimeSlots(dateOfAppointment);
-            } catch (Exception ex)
+                result = await _appointmentDAO.FindAllEmployeesAndAvailableTimeSlots(dateOfAppointment);
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return StatusCode(500);
@@ -114,7 +114,8 @@ namespace AppointmentSchedulerServer.Controllers
             try
             {
                 result = await _appointmentDAO.GetAllAppointmentTypes();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return StatusCode(500);
@@ -132,7 +133,8 @@ namespace AppointmentSchedulerServer.Controllers
             try
             {
                 result = await _employeeDAO.GetEmployeeByAppointmentType(id);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return StatusCode(500);

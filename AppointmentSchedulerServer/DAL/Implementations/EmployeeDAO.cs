@@ -1,4 +1,4 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+﻿using AppointmentSchedulerServer.DAL.Interfaces;
 using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.DbConnections;
 using AppointmentSchedulerServer.Exceptions;
@@ -6,7 +6,7 @@ using AppointmentSchedulerServer.Models;
 using Dapper;
 using System.Data;
 
-namespace AppointmentSchedulerServer.Repositories.Implementations
+namespace AppointmentSchedulerServer.DAL.Implementations
 {
     public class EmployeeDAO : IEmployeeDAO
     {
@@ -74,7 +74,7 @@ namespace AppointmentSchedulerServer.Repositories.Implementations
             IEnumerable<GetEmployeeDTO> employeesFound;
             try
             {
-                employeesFound = await database.QueryAsync<GetEmployeeDTO>(SqlQueries.QUERY_FIND_EMPLOYEE_BY_APPOINTMENT_TYPE, new {AppointmentTypes_Id = id});
+                employeesFound = await database.QueryAsync<GetEmployeeDTO>(SqlQueries.QUERY_FIND_EMPLOYEE_BY_APPOINTMENT_TYPE, new { AppointmentTypes_Id = id });
             }
             catch (Exception ex)
             {

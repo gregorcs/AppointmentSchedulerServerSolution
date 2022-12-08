@@ -1,5 +1,4 @@
-﻿
-namespace AppointmentSchedulerServer.Repositories
+﻿namespace AppointmentSchedulerServer.DAL
 {
     public class SqlQueries
     {

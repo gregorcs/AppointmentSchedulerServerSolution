@@ -1,11 +1,12 @@
-﻿using AppointmentSchedulerServer.DbConnections;
-using AppointmentSchedulerServer.Models;
+﻿using AppointmentSchedulerServer.DAL.Interfaces;
+using AppointmentSchedulerServer.DataTransferObjects;
+using AppointmentSchedulerServer.DbConnections;
 using AppointmentSchedulerServer.Exceptions;
+using AppointmentSchedulerServer.Models;
 using Dapper;
 using System.Data;
-using AppointmentSchedulerServer.Data_Transfer_Objects;
 
-namespace AppointmentSchedulerServer.Repositories
+namespace AppointmentSchedulerServer.DAL.Implementations
 {
     public class AccountDAO : IAccountDAO
     {
@@ -41,12 +42,13 @@ namespace AppointmentSchedulerServer.Repositories
             Account accountToValidate = new(entity);
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             var accountFound = await database.QueryFirstAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, accountToValidate);
-            if (accountFound != null 
-                && (BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, accountFound.Password)
-                && entity.Email.Equals(accountFound.Email)))
+            if (accountFound != null
+                && BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, accountFound.Password)
+                && entity.Email.Equals(accountFound.Email))
             {
                 return accountFound.Id;
-            } else
+            }
+            else
             {
                 return 0;
             }

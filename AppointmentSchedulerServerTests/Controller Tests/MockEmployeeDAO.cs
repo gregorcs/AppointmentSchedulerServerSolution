@@ -1,9 +1,7 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
-using AppointmentSchedulerServer.Repositories;
+﻿using AppointmentSchedulerServer.DAL.Interfaces;
+using AppointmentSchedulerServer.DataTransferObjects;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AppointmentSchedulerServerTests.Controller_Tests

@@ -1,7 +1,7 @@
 ﻿using AppointmentSchedulerServer.Controllers;
+using AppointmentSchedulerServer.DAL.Interfaces;
+using AppointmentSchedulerServer.DataTransferObjects;
 using NUnit.Framework;
-using AppointmentSchedulerServer.Repositories;
-using AppointmentSchedulerServer.Data_Transfer_Objects;
 
 namespace AppointmentSchedulerServerTests.Controller_Tests
 {
@@ -14,7 +14,7 @@ namespace AppointmentSchedulerServerTests.Controller_Tests
 
         }
         [Test]
-        public async void AccountDtoShouldSave() 
+        public async void AccountDtoShouldSave()
         {
             //arrange
 

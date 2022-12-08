@@ -1,11 +1,8 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+﻿using AppointmentSchedulerServer.DAL.Interfaces;
+using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.Models;
-using AppointmentSchedulerServer.Repositories;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AppointmentSchedulerServerTests.Controller_Tests
@@ -72,7 +69,7 @@ namespace AppointmentSchedulerServerTests.Controller_Tests
             Account account = new Account(entity);
             var AccountToFind = Accounts.Find(Acc => account.Password == Acc.Password);
             return (AccountToFind != null)
-                ? Task.FromResult(Convert.ToInt64(1)) 
+                ? Task.FromResult(Convert.ToInt64(1))
                 : Task.FromResult(Convert.ToInt64(0));
         }
     }

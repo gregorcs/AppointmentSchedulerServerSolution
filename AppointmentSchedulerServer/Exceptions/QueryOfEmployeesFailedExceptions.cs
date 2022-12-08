@@ -1,7 +1,6 @@
-﻿using AppointmentSchedulerServer.Exceptions;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
-namespace AppointmentSchedulerServer.Repositories.Implementations
+namespace AppointmentSchedulerServer.Exceptions
 {
     [Serializable]
     internal class QueryOfEmployeesFailedExceptions : Exception

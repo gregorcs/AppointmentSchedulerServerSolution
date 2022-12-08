@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations;
-
-namespace AppointmentSchedulerServer.Data_Transfer_Objects
+﻿namespace AppointmentSchedulerServer.DataTransferObjects
 {
     public class EmployeeDTO : AccountDTO
     {

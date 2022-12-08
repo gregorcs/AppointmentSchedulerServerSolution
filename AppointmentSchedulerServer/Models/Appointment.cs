@@ -1,5 +1,4 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
-using System.Collections;
+﻿using AppointmentSchedulerServer.DataTransferObjects;
 
 namespace AppointmentSchedulerServer.Models
 {

@@ -1,5 +1,4 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
-using AppointmentSchedulerServer.Models;
+﻿using AppointmentSchedulerServer.DataTransferObjects;
 
 namespace AppointmentSchedulerServer.Models
 {

@@ -1,6 +1,4 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
-using AppointmentSchedulerServer.Models;
-using System.Collections;
+﻿using System.Collections;
 
 namespace AppointmentSchedulerServer.DataTransferObjects
 {
@@ -27,7 +25,7 @@ namespace AppointmentSchedulerServer.DataTransferObjects
             IsApproved = isApproved;
             Name = name;
             Description = description;
-            EmployeeNameList = new ArrayList(); 
+            EmployeeNameList = new ArrayList();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace AppointmentSchedulerServer.Repositories
+namespace AppointmentSchedulerServer.Exceptions
 {
     [Serializable]
     internal class LoginFailedException : Exception

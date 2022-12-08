@@ -1,8 +1,6 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
-using AppointmentSchedulerServer.DataTransferObjects;
-using AppointmentSchedulerServer.Models;
+﻿using AppointmentSchedulerServer.DataTransferObjects;
 
-namespace AppointmentSchedulerServer.Repositories.Interfaces
+namespace AppointmentSchedulerServer.DAL.Interfaces
 {
     public interface IAppointmentDAO : ICrudDAO<CreateAppointmentDTO, long>
     {

@@ -1,7 +1,4 @@
-﻿using AppointmentSchedulerServer.Models;
-using System.Collections;
-
-namespace AppointmentSchedulerServer.Data_Transfer_Objects
+﻿namespace AppointmentSchedulerServer.DataTransferObjects
 {
     public class CreateAppointmentDTO
     {

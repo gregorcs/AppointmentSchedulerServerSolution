@@ -1,8 +1,9 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+﻿using AppointmentSchedulerServer.BusinessLogicLayer.Interfaces;
+using AppointmentSchedulerServer.DAL.Interfaces;
+using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.Exceptions;
+using AppointmentSchedulerServer.JWT;
 using AppointmentSchedulerServer.Models;
-using AppointmentSchedulerServer.Repositories;
-using AppointmentSchedulerServerTests.JWT;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,101 +14,58 @@ namespace AppointmentSchedulerServer.Controllers
     [Route("api/v1/[controller]/")]
     public class AccountController : Controller
     {
-        private readonly IAccountDAO _accountDAO;
-        private readonly IEmployeeDAO _employeeDAO;
+        private readonly IAccountBLL _accountBLL;
 
         private const string EmployeeRole = "Admin";
         private const string UserRole = "User";
         private const string UserAndEmployeeRoles = UserRole + ", " + EmployeeRole;
 
-        public AccountController(IAccountDAO accountDAO, IEmployeeDAO employeeDAO)
+        public AccountController(IAccountBLL accountBLL)
         {
-            _accountDAO = accountDAO;
-            _employeeDAO = employeeDAO;
+            _accountBLL = accountBLL;
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult<Account>> Post(AccountDTO account)
         {
-            if (account is null)
-            {
-                return BadRequest(ControllerErrorMessages.InvalidAccount);
-            }
-
-            if (await _accountDAO.ExistsByEmail(account))
-            {
-                return BadRequest(ControllerErrorMessages.InvalidEmail);
-            }
-            try
-            {
-                var result = await _accountDAO.Save(account);
-                return result != null ? Ok(result) : NotFound();
-            }
-            catch (Exception ex)
-            {
-                //i CW the exception since we are not implementing
-                //a logger and i wanna see if there are any exceptions
-                Console.WriteLine(ex);
-                return StatusCode(500, ControllerErrorMessages.EncounteredError);
-            }
+            return await _accountBLL.Save(account);
         }
 
         [HttpPost("authenticate")]
         [AllowAnonymous]
         public async Task<IActionResult> Authenticate([FromBody] AccountDTO accountDTO)
         {
-            long accountIdFound;
-            EmployeeDTO employeeFound;
-            try
-            {
-                accountIdFound = await _accountDAO.ValidateAccountByEmailAndPassword(accountDTO);
-                employeeFound = await _employeeDAO.FindById(accountIdFound);
-            } catch (Exception ex)
-            {
-                //logger here
-                Console.WriteLine(ex);
-                return StatusCode(500, ControllerErrorMessages.CouldNotLogin);
-            }
-
-            if (accountIdFound > 0)
-            {
-                var result = employeeFound == null
-                    ? Ok(new { Role = "User", JwtToken = JWTHandler.CreateUserToken(accountDTO), Id = accountIdFound })
-                    : Ok(new { Role = "Admin", JwtToken = JWTHandler.CreateAdminToken(accountDTO), Id = accountIdFound });
-                return result;
-            }
-            return BadRequest("There has a problem finding your account");
+            return await _accountBLL.Authenticate(accountDTO);
         }
 
         [HttpGet]
         [Route("{id:int}")]
         [Authorize(Roles = EmployeeRole)]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult> GetById(int id)
         {
-            AccountDTO accountFound = await _accountDAO.FindById(id);
-            return accountFound != null ? Ok(accountFound) : NotFound();
+            return await _accountBLL.GetById(id);
         }
 
         [HttpDelete]
         [Authorize(Roles = UserAndEmployeeRoles)]
         public void Delete(int Id)
         {
-
+            throw new NotImplementedException();
         }
 
         [HttpPut]
         [Authorize(Roles = UserAndEmployeeRoles)]
         public void Update(Account account)
         {
+            throw new NotImplementedException();
         }
 
         [HttpGet]
         [Authorize(Roles = EmployeeRole)]
-        public async Task<IActionResult> FindAll()
+        public async Task<ActionResult> FindAll()
         {
-            var result = await _accountDAO.FindAll();
-            return result != null ? Ok(result) : NotFound();
+            return await _accountBLL.FindAll();
         }
     }
 }

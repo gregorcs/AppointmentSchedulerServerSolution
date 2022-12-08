@@ -1,9 +1,7 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+﻿using AppointmentSchedulerServer.DAL.Interfaces;
 using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.Exceptions;
 using AppointmentSchedulerServer.Models;
-using AppointmentSchedulerServer.Repositories;
-using AppointmentSchedulerServerTests.JWT;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
