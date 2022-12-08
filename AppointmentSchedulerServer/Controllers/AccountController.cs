@@ -1,8 +1,5 @@
 ﻿using AppointmentSchedulerServer.BusinessLogicLayer.Interfaces;
-using AppointmentSchedulerServer.DAL.Interfaces;
 using AppointmentSchedulerServer.DataTransferObjects;
-using AppointmentSchedulerServer.Exceptions;
-using AppointmentSchedulerServer.JWT;
 using AppointmentSchedulerServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,5 +1,4 @@
-﻿using AppointmentSchedulerServer.DAL;
-using AppointmentSchedulerServer.DAL.Interfaces;
+﻿using AppointmentSchedulerServer.DAL.Interfaces;
 using AppointmentSchedulerServer.DataTransferObjects;
 using AppointmentSchedulerServer.DbConnections;
 using AppointmentSchedulerServer.Exceptions;

@@ -39,7 +39,7 @@ namespace AppointmentSchedulerServer.BusinessLogicLayer.Implementation
                 //i CW the exception since we are not implementing
                 //a logger and i wanna see if there are any exceptions
                 Console.WriteLine(ex);
-                return new ObjectResult(ControllerErrorMessages.EncounteredError) { StatusCode = 500};
+                return new ObjectResult(ControllerErrorMessages.EncounteredError) { StatusCode = 500 };
             }
         }
 
