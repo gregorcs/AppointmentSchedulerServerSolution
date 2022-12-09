@@ -49,7 +49,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             try
             {
-                appointmentsFound = await database.QueryAsync<GetAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_CUSTOMER_ID, id);
+                appointmentsFound = await database.QueryAsync<GetAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_CUSTOMER_ID, new { Id = id});
             }
             catch (Exception ex)
             {
@@ -58,13 +58,17 @@ namespace AppointmentSchedulerServer.DAL.Implementations
             return appointmentsFound;
         }
 
-        public async Task<IEnumerable<GetAppointmentDTO>> FindAllByEmployeeId(long Id)
+        public async Task<IEnumerable<GetAppointmentDTO>> FindAllByEmployeeId(long id)
         {
             IEnumerable<GetAppointmentDTO> appointmentsFound;
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             try
             {
-                appointmentsFound = await database.QueryAsync<GetAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_EMPLOYEE_ID, new { Id });
+                appointmentsFound = await database.QueryAsync<GetAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_EMPLOYEE_ID, new { Id = id});
+                foreach(GetAppointmentDTO appointment in appointmentsFound)
+                {
+                    appointment.Employees = await database.QueryAsync<GetEmployeeDTO>(SqlQueries.QUERY_FIND_EMPLOYEES_FOR_APPOINTMENT, new { Id = appointment.Id });
+                }
             }
             catch (Exception ex)
             {
