@@ -156,6 +156,10 @@ namespace AppointmentSchedulerServer.DAL.Implementations
             return appointmentFound;
         }
 
+
+        /*######################################################################################
+         * ---------------------------------TRANSACTION---------------------------------------
+        ########################################################################################*/
         public async Task<CreateAppointmentDTO> Save([FromBody] CreateAppointmentDTO entity)
         {
             Appointment appointmentToSave = new(entity);
@@ -166,14 +170,20 @@ namespace AppointmentSchedulerServer.DAL.Implementations
             long createdAppointmentId = -1;
             try
             {
-                //todo handle edge cases for posting the same date twice
-                //todo handle exceptions in general
-                //todo handle find by id on return
+                //READ
+                foreach (long EmployeeId in appointmentToSave.EmployeeIdList)
+                {
+                    int amount = await database.QueryFirstAsync<int>(SqlQueries.QUERY_COUNT_APPOINTMENTS_FOR_EMPLOYEE_TIME_AND_DATE, new { Id = EmployeeId, Date = appointmentToSave.Date, TimeSlot = appointmentToSave.TimeSlot }, transaction);
+                    if (amount > 0)
+                    {
+                        throw new DatabaseInsertionException(DALExceptionMessages.EmployeeUnavailable);
+                    }
+                }
 
-                //select * from appointments inner join employees
+                //SAVE
                 createdAppointmentId = await database.ExecuteScalarAsync<long>(SqlQueries.QUERY_SAVE_APPOINTMENT, appointmentToSave, transaction);
 
-                foreach (long EmployeeId in appointmentToSave.EmployeeIdList)
+                foreach(long EmployeeId in appointmentToSave.EmployeeIdList)
                 {
                     await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT, new { employeeId = EmployeeId, appointmentId = createdAppointmentId }, transaction);
                 }
