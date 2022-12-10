@@ -60,6 +60,21 @@ namespace AppointmentSchedulerServer.DAL.Implementations
             return await database.QueryAsync<AccountDTO>(SqlQueries.QUERY_SELECT_EVERYTHING_ACCOUNTS);
         }
 
+        public async Task<IEnumerable<GetEmployeeDTO>> FindAllEmployees()
+        {
+            IEnumerable<GetEmployeeDTO> employeesFound;
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            try
+            {
+                employeesFound = await database.QueryAsync<GetEmployeeDTO>(SqlQueries.QUERY_FIND_ALL_EMPLOYEES);
+            }
+            catch(Exception ex)
+            {
+                throw new RetrievalFailedException(DALExceptionMessages.EmployeeRetreivalFailed, ex);
+            }
+            return employeesFound;
+        }
+
         public Task<IEnumerable<AccountDTO>> FindAllById(IEnumerable<long> Ids)
         {
             throw new NotImplementedException();

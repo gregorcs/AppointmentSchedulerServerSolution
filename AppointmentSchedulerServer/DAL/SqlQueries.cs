@@ -61,5 +61,6 @@
                                                                         "WHERE t3.AppointmentTypes_Id = @AppointmentTypes_Id";
 
         public const string QUERY_COUNT_APPOINTMENTS_FOR_EMPLOYEE_TIME_AND_DATE = "SELECT COUNT(*) AS Amount FROM Employees_Appointments t1 INNER JOIN  Appointments t2 ON t1.Appointments_Id = t2.Id WHERE t1.Accounts_Id = @Id AND TimeSlot = @Timeslot AND Date = @Date";
+        public const string QUERY_FIND_ALL_EMPLOYEES = "SELECT * FROM Employees t1 INNER JOIN Accounts t2 ON t1.Accounts_Id = t2.Id";
     }
 }
