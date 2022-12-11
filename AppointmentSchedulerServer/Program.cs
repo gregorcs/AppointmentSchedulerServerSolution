@@ -13,7 +13,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 //data access layer injection
-builder.Services.AddSingleton(new SqlServerDbConnectionFactory("Server=hildur.ucn.dk;Database=CSC-CSD-S212_10407644;User Id=CSC-CSD-S212_10407644;Password=Password1!;"));
+builder.Services.AddSingleton(new SqlServerDbConnection("Server=hildur.ucn.dk;Database=CSC-CSD-S212_10407644;User Id=CSC-CSD-S212_10407644;Password=Password1!;"));
 builder.Services.AddSingleton<IAccountDAO, AccountDAO>();
 builder.Services.AddSingleton<IEmployeeDAO, EmployeeDAO>();
 builder.Services.AddSingleton<IAccountDAO, AccountDAO>();

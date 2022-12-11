@@ -10,9 +10,9 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 {
     public class EmployeeDAO : IEmployeeDAO
     {
-        private readonly SqlServerDbConnectionFactory _sqlDbConnectionFactory;
+        private readonly SqlServerDbConnection _sqlDbConnectionFactory;
 
-        public EmployeeDAO(SqlServerDbConnectionFactory sqlDbConnectionFactory)
+        public EmployeeDAO(SqlServerDbConnection sqlDbConnectionFactory)
         {
             _sqlDbConnectionFactory = sqlDbConnectionFactory;
         }

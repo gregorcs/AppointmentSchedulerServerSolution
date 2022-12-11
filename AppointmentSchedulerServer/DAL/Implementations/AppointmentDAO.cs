@@ -11,9 +11,9 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 {
     public class AppointmentDAO : IAppointmentDAO
     {
-        private readonly SqlServerDbConnectionFactory _sqlDbConnectionFactory;
+        private readonly SqlServerDbConnection _sqlDbConnectionFactory;
 
-        public AppointmentDAO(SqlServerDbConnectionFactory sqlDbConnectionFactory)
+        public AppointmentDAO(SqlServerDbConnection sqlDbConnectionFactory)
         {
             _sqlDbConnectionFactory = sqlDbConnectionFactory;
         }
@@ -107,7 +107,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
             database.Open();
-            using var transaction = database.BeginTransaction(IsolationLevel.RepeatableRead);
+            using var transaction = database.BeginTransaction();
             long createdAppointmentId = -1;
             try
             {
@@ -115,7 +115,6 @@ namespace AppointmentSchedulerServer.DAL.Implementations
                 foreach (long EmployeeId in appointmentToSave.EmployeeIdList)
                 {
                     int amount = await database.QueryFirstAsync<int>(SqlQueries.QUERY_COUNT_APPOINTMENTS_FOR_EMPLOYEE_TIME_AND_DATE, new { Id = EmployeeId, Date = appointmentToSave.Date, TimeSlot = appointmentToSave.TimeSlot }, transaction);
-                    Thread.Sleep(2000);
                     if (amount > 0)
                     {
                         throw new DatabaseInsertionException(DALExceptionMessages.EmployeeUnavailable);
