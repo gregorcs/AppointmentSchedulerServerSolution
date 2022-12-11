@@ -1,4 +1,6 @@
-﻿namespace AppointmentSchedulerServer.DAL
+﻿using AppointmentSchedulerServer.Models;
+
+namespace AppointmentSchedulerServer.DAL
 {
     public class SqlQueries
     {
@@ -51,10 +53,9 @@
         "WHERE Date = @Date) t3 " +
         "ON t2.Accounts_Id = t3.Accounts_Id " +
         "GROUP BY t2.Accounts_Id, t2.RoomNumber, t1.Username";
-        public const string QUERY_FIND_UNAVAILABLE_TIMESLOTS_BY_EMPLOYE_AND_DATE = "SELECT t3.TimeSlot FROM Accounts t1 " +
-        "INNER JOIN Employees t2 ON t1.Id = t2.Accounts_Id " +
-        "INNER JOIN Appointments t3 ON t2.Accounts_Id = t3.Accounts_Id " +
-        "WHERE t3.Date = @Date AND t2.Accounts_Id = @Id;";
+        public const string QUERY_FIND_UNAVAILABLE_TIMESLOTS_BY_EMPLOYE_AND_DATE = "SELECT t1.TimeSlot FROM Appointments t1 INNER JOIN Employees_Appointments t2 ON t1.Id = t2.Appointments_Id WHERE t2.Accounts_Id= @Id AND Date = @Date";
+
+
         public const string QUERY_FIND_ALL_APPOINTMENT_TYPES = "SELECT * FROM AppointmentTypes";
 
         public const string QUERY_FIND_EMPLOYEE_BY_APPOINTMENT_TYPE = "SELECT t1.Accounts_Id, Username, Email, Role, RoomNumber FROM Employees t1 INNER JOIN Accounts t2 ON t1.Accounts_Id = t2.Id " +

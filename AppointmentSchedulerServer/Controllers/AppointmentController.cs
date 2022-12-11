@@ -36,8 +36,7 @@ namespace AppointmentSchedulerServer.Controllers
 
         //todo figure out how to get appointment, employee, account into controller -> repository
         [HttpPost]
-        //[Authorize(Roles = UserAndEmployeeRoles)]
-        [AllowAnonymous]
+        [Authorize(Roles = UserAndEmployeeRoles)]
         public async Task<IActionResult> Post([FromBody] CreateAppointmentDTO appointmentDTO)
         {
             return await _appointmentBLL.Save(appointmentDTO);
@@ -51,13 +50,6 @@ namespace AppointmentSchedulerServer.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
-
-        [HttpGet("{dateOfAppointment}")]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployeesAndAvailableTimeSlots(DateTime dateOfAppointment)
-        {
-            return await _appointmentBLL.GetAllEmployeesAndAvailableTimeSlots(dateOfAppointment);
         }
 
         [HttpGet("{dateOfAppointment}/{id}")]

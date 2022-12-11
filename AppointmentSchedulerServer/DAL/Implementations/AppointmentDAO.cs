@@ -82,65 +82,6 @@ namespace AppointmentSchedulerServer.DAL.Implementations
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<EmployeeDTO>> FindAllEmployeesAndAvailableTimeSlots(DateTime dateOfAppointment)
-        {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
-            IEnumerable<EmployeeDTO> employeesFound;
-            try
-            {
-                //try to find unavailable list here
-                employeesFound = await database.QueryAsync<EmployeeDTO>(SqlQueries.QUERY_FIND_ALL_EMPLOYEES_AND_TIMESLOTS_BY_DATE, dateOfAppointment);
-                foreach (EmployeeDTO employee in employeesFound)
-                {
-                    employee.Appointments = await database.QueryAsync<int>(SqlQueries.QUERY_FIND_UNAVAILABLE_TIMESLOTS_BY_EMPLOYE_AND_DATE, new { Date = dateOfAppointment, Id = employee.Accounts_Id });
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw new QueryOfEmployeesFailedExceptions(DALExceptionMessages.CouldNotQueryEmployees, ex);
-            }
-            return ConvertQueriedUnavailableHoursToAvailable(employeesFound);
-        }
-
-        //we queried the timeslots that are unavailable, here we do: available timeslots - unvailable timeslots = actual timeslots
-        private IEnumerable<EmployeeDTO> ConvertQueriedUnavailableHoursToAvailable(IEnumerable<EmployeeDTO> employees)
-        {
-            //hardcoded but could be moved to DB layer
-            const int startingHour = 7;
-            const int finishingHour = 17;
-            foreach (EmployeeDTO employee in employees)
-            {
-                ICollection<int> availableHours = new List<int>();
-                //no unavailable hours found for this employee
-                if (employee.Appointments == null)
-                {
-                    for (int i = startingHour; i <= finishingHour; i++)
-                    {
-                        availableHours.Add(i);
-                    }
-                    employee.Appointments = availableHours;
-                    continue;
-                }
-                if (employee.Appointments != null)
-                {
-                    //unavailable hour(s) found
-
-                    for (int i = startingHour; i < finishingHour; i++)
-                    {
-                        //only add timeslots that are not taken 
-                        if (!employee.Appointments.Contains(i))
-                        {
-                            availableHours.Add(i);
-                        }
-                    }
-                    employee.Appointments = availableHours;
-                    continue;
-                }
-            }
-            return employees;
-        }
-
         public async Task<CreateAppointmentDTO> FindById(long id)
         {
             using IDbConnection database = _sqlDbConnectionFactory.Connect();
@@ -174,7 +115,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
                 foreach (long EmployeeId in appointmentToSave.EmployeeIdList)
                 {
                     int amount = await database.QueryFirstAsync<int>(SqlQueries.QUERY_COUNT_APPOINTMENTS_FOR_EMPLOYEE_TIME_AND_DATE, new { Id = EmployeeId, Date = appointmentToSave.Date, TimeSlot = appointmentToSave.TimeSlot }, transaction);
-                    Thread.Sleep(5000);
+                    Thread.Sleep(2000);
                     if (amount > 0)
                     {
                         throw new DatabaseInsertionException(DALExceptionMessages.EmployeeUnavailable);
@@ -229,7 +170,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
             IEnumerable<int> bookedAppointments;
 
-            bookedAppointments = await database.QueryAsync<int>(SqlQueries.QUERY_FIND_UNAVAILABLE_TIMESLOTS_BY_EMPLOYE_AND_DATE, new { Date = dateOfAppointment, Id = id });
+            bookedAppointments = await database.QueryAsync<int>(SqlQueries.QUERY_FIND_UNAVAILABLE_TIMESLOTS_BY_EMPLOYE_AND_DATE, new { Date = dateOfAppointment.Date, Id = id });
 
             ICollection<int> availableHours = new List<int>();
 

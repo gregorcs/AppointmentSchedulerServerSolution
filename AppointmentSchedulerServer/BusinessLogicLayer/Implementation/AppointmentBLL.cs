@@ -75,25 +75,6 @@ namespace AppointmentSchedulerServer.BusinessLogicLayer.Implementation
             return new OkObjectResult(result);
         }
 
-        public async Task<ActionResult<IEnumerable<EmployeeDTO>>> GetAllEmployeesAndAvailableTimeSlots(DateTime dateOfAppointment)
-        {
-            IEnumerable<EmployeeDTO> result;
-
-            if (dateOfAppointment == null)
-            {
-                return new BadRequestObjectResult(ControllerErrorMessages.InvalidAppointment);
-            }
-            try
-            {
-                result = await _appointmentDAO.FindAllEmployeesAndAvailableTimeSlots(dateOfAppointment);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new ObjectResult(ex.Message) { StatusCode = 500 };
-            }
-            return new OkObjectResult(result);
-        }
         public async Task<ActionResult<IEnumerable<AppointmentTypeDTO>>> GetAllAppointmentTypes()
         {
             IEnumerable<AppointmentTypeDTO> result;
