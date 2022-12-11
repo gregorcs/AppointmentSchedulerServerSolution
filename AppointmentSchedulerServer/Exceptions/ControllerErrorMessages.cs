@@ -8,5 +8,6 @@
         public const string AppointmentError = "Encountered an error while recieving list of appointments";
         public const string InvalidAppointment = "Invalid appointment";
         public const string CouldNotLogin = "There was a problem logging in";
+        public const string EmployeeDoesNotExist = "Employee id does not point towards an account";
     }
 }

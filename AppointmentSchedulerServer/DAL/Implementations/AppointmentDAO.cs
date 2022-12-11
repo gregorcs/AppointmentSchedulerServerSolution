@@ -174,6 +174,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
                 foreach (long EmployeeId in appointmentToSave.EmployeeIdList)
                 {
                     int amount = await database.QueryFirstAsync<int>(SqlQueries.QUERY_COUNT_APPOINTMENTS_FOR_EMPLOYEE_TIME_AND_DATE, new { Id = EmployeeId, Date = appointmentToSave.Date, TimeSlot = appointmentToSave.TimeSlot }, transaction);
+                    Thread.Sleep(5000);
                     if (amount > 0)
                     {
                         throw new DatabaseInsertionException(DALExceptionMessages.EmployeeUnavailable);
@@ -217,6 +218,29 @@ namespace AppointmentSchedulerServer.DAL.Implementations
                 throw new RetrievalFailedException(DALExceptionMessages.SingleAppointmentRetrievalFailed, ex);
             }
             return appointmentTypesFound;
+        }
+
+        public async Task<IEnumerable<int>> GetTimeSlotsForEmployee(DateTime dateOfAppointment, long id)
+        {
+            const int startingHour = 7;
+            const int finishingHour = 17;
+
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+
+            IEnumerable<int> bookedAppointments;
+
+            bookedAppointments = await database.QueryAsync<int>(SqlQueries.QUERY_FIND_UNAVAILABLE_TIMESLOTS_BY_EMPLOYE_AND_DATE, new { Date = dateOfAppointment, Id = id });
+
+            ICollection<int> availableHours = new List<int>();
+
+            for(int i = startingHour; i<finishingHour; i++)
+            {
+                if (!bookedAppointments.Contains(i))
+                {
+                    availableHours.Add(i);
+                }
+            }
+            return availableHours;
         }
     }
 }

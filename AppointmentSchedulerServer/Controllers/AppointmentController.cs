@@ -60,6 +60,13 @@ namespace AppointmentSchedulerServer.Controllers
             return await _appointmentBLL.GetAllEmployeesAndAvailableTimeSlots(dateOfAppointment);
         }
 
+        [HttpGet("{dateOfAppointment}/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<int>>> GetTimeSlotsForEmployee(DateTime dateOfAppointment, int id)
+        {
+            return await _appointmentBLL.GetTimeSlotsForEmployee(dateOfAppointment, id);
+        }
+
         [HttpGet]
         [Route("types")]
         [AllowAnonymous]

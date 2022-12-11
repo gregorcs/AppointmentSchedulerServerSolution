@@ -8,6 +8,7 @@ namespace AppointmentSchedulerServer.DAL.Interfaces
         public Task<IEnumerable<GetAppointmentDTO>> FindAllByEmployeeId(long id);
         Task<IEnumerable<EmployeeDTO>> FindAllEmployeesAndAvailableTimeSlots(DateTime dateOfAppointment);
 
+        Task<IEnumerable<int>> GetTimeSlotsForEmployee(DateTime dateOfAppointment, long id);
         Task<IEnumerable<AppointmentTypeDTO>> GetAllAppointmentTypes();
 
     }

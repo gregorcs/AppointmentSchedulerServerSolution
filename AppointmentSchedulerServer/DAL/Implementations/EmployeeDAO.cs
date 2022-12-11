@@ -38,9 +38,11 @@ namespace AppointmentSchedulerServer.DAL.Implementations
             return result != null;
         }
 
-        public Task<bool> ExistsById(long id)
+        public async Task<bool> ExistsById(long id)
         {
-            throw new NotImplementedException();
+            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            var result = await database.QueryFirstOrDefaultAsync<EmployeeDTO>(SqlQueries.QUERY_FIND_EMPLOYEE_BY_ID, new { Id = id });
+            return result != null;
         }
 
         public Task<IEnumerable<EmployeeDTO>> FindAll()
