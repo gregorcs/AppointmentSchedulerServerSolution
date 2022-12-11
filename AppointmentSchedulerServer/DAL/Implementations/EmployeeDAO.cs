@@ -10,11 +10,11 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 {
     public class EmployeeDAO : IEmployeeDAO
     {
-        private readonly SqlServerDbConnection _sqlDbConnectionFactory;
+        private readonly SqlServerDbConnection _sqlDbConnection;
 
-        public EmployeeDAO(SqlServerDbConnection sqlDbConnectionFactory)
+        public EmployeeDAO(SqlServerDbConnection sqlDbConnection)
         {
-            _sqlDbConnectionFactory = sqlDbConnectionFactory;
+            _sqlDbConnection = sqlDbConnection;
         }
         public Task Delete(EmployeeDTO entity)
         {
@@ -33,14 +33,14 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
         public async Task<bool> ExistsByEmail(EmployeeDTO entity)
         {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             var result = await database.QueryFirstOrDefaultAsync<AccountDTO>(SqlQueries.QUERY_FIND_ACCOUNT_BY_EMAIL, entity);
             return result != null;
         }
 
         public async Task<bool> ExistsById(long id)
         {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             var result = await database.QueryFirstOrDefaultAsync<EmployeeDTO>(SqlQueries.QUERY_FIND_EMPLOYEE_BY_ID, new { Id = id });
             return result != null;
         }
@@ -57,7 +57,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
         public async Task<EmployeeDTO> FindById(long id)
         {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             EmployeeDTO employeeFound;
             try
             {
@@ -72,7 +72,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
         public async Task<IEnumerable<GetEmployeeDTO>> GetEmployeeByAppointmentType(long id)
         {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             IEnumerable<GetEmployeeDTO> employeesFound;
             try
             {
@@ -88,7 +88,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
         public async Task<EmployeeDTO> Save(EmployeeDTO entity)
         {
             Employee employeeToSave = new(entity);
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             employeeToSave.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(employeeToSave.Password);
             long createdId;
             database.Open();

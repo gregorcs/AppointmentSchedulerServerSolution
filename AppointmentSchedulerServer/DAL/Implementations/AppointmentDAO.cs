@@ -11,11 +11,11 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 {
     public class AppointmentDAO : IAppointmentDAO
     {
-        private readonly SqlServerDbConnection _sqlDbConnectionFactory;
+        private readonly SqlServerDbConnection _sqlDbConnection;
 
-        public AppointmentDAO(SqlServerDbConnection sqlDbConnectionFactory)
+        public AppointmentDAO(SqlServerDbConnection sqlDbConnection)
         {
-            _sqlDbConnectionFactory = sqlDbConnectionFactory;
+            _sqlDbConnection = sqlDbConnection;
         }
 
         public Task Delete(CreateAppointmentDTO entity)
@@ -46,7 +46,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
         public async Task<IEnumerable<GetAppointmentDTO>> FindAllByAccountId(long id)
         {
             IEnumerable<GetAppointmentDTO> appointmentsFound;
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             try
             {
                 appointmentsFound = await database.QueryAsync<GetAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_CUSTOMER_ID, new { Id = id});
@@ -61,7 +61,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
         public async Task<IEnumerable<GetAppointmentDTO>> FindAllByEmployeeId(long id)
         {
             IEnumerable<GetAppointmentDTO> appointmentsFound;
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             try
             {
                 appointmentsFound = await database.QueryAsync<GetAppointmentDTO>(SqlQueries.QUERY_FIND_APPOINTMENTS_BY_EMPLOYEE_ID, new { Id = id});
@@ -84,7 +84,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
         public async Task<CreateAppointmentDTO> FindById(long id)
         {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             CreateAppointmentDTO appointmentFound;
             try
             {
@@ -105,9 +105,9 @@ namespace AppointmentSchedulerServer.DAL.Implementations
         {
             Appointment appointmentToSave = new(entity);
 
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             database.Open();
-            using var transaction = database.BeginTransaction();
+            using var transaction = database.BeginTransaction(IsolationLevel.RepeatableRead);
             long createdAppointmentId = -1;
             try
             {
@@ -115,6 +115,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
                 foreach (long EmployeeId in appointmentToSave.EmployeeIdList)
                 {
                     int amount = await database.QueryFirstAsync<int>(SqlQueries.QUERY_COUNT_APPOINTMENTS_FOR_EMPLOYEE_TIME_AND_DATE, new { Id = EmployeeId, Date = appointmentToSave.Date, TimeSlot = appointmentToSave.TimeSlot }, transaction);
+                    Thread.Sleep(2000);
                     if (amount > 0)
                     {
                         throw new DatabaseInsertionException(DALExceptionMessages.EmployeeUnavailable);
@@ -147,7 +148,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
         public async Task<IEnumerable<AppointmentTypeDTO>> GetAllAppointmentTypes()
         {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             IEnumerable<AppointmentTypeDTO> appointmentTypesFound;
             try
             {
@@ -165,7 +166,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
             const int startingHour = 7;
             const int finishingHour = 17;
 
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
 
             IEnumerable<int> bookedAppointments;
 
@@ -181,6 +182,11 @@ namespace AppointmentSchedulerServer.DAL.Implementations
                 }
             }
             return availableHours;
+        }
+
+        public Task<IEnumerable<EmployeeDTO>> FindAllEmployeesAndAvailableTimeSlots(DateTime dateOfAppointment)
+        {
+            throw new NotImplementedException();
         }
     }
 }

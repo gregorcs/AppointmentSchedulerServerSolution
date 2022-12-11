@@ -10,11 +10,11 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 {
     public class AccountDAO : IAccountDAO
     {
-        private readonly SqlServerDbConnection _sqlDbConnectionFactory;
+        private readonly SqlServerDbConnection _sqlDbConnection;
 
-        public AccountDAO(SqlServerDbConnection sqlDbConnectionFactory)
+        public AccountDAO(SqlServerDbConnection sqlDbConnection)
         {
-            _sqlDbConnectionFactory = sqlDbConnectionFactory;
+            _sqlDbConnection = sqlDbConnection;
         }
 
         public Task Delete(AccountDTO entity)
@@ -40,7 +40,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
         public async Task<long> ValidateAccountByEmailAndPassword(AccountDTO entity)
         {
             Account accountToValidate = new(entity);
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             var accountFound = await database.QueryFirstAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, accountToValidate);
             if (accountFound != null
                 && BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, accountFound.Password)
@@ -56,14 +56,14 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
         public async Task<IEnumerable<AccountDTO>> FindAll()
         {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             return await database.QueryAsync<AccountDTO>(SqlQueries.QUERY_SELECT_EVERYTHING_ACCOUNTS);
         }
 
         public async Task<IEnumerable<GetEmployeeDTO>> FindAllEmployees()
         {
             IEnumerable<GetEmployeeDTO> employeesFound;
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             try
             {
                 employeesFound = await database.QueryAsync<GetEmployeeDTO>(SqlQueries.QUERY_FIND_ALL_EMPLOYEES);
@@ -82,7 +82,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
         public async Task<AccountDTO> FindById(long id)
         {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             AccountDTO accountFound;
             try
             {
@@ -98,7 +98,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
         public async Task<AccountDTO> Save(AccountDTO entity)
         {
             Account accountToSave = new(entity);
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             accountToSave.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(accountToSave.Password);
             long createdId;
 
@@ -122,7 +122,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
         public async Task<bool> ExistsByEmail(AccountDTO entity)
         {
-            using IDbConnection database = _sqlDbConnectionFactory.Connect();
+            using IDbConnection database = _sqlDbConnection.Connect();
             var result = await database.QueryFirstOrDefaultAsync<AccountDTO>(SqlQueries.QUERY_FIND_ACCOUNT_BY_EMAIL, entity);
             return result != null;
         }
