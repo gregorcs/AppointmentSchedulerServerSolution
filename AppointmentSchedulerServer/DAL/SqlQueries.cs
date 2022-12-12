@@ -37,8 +37,8 @@ namespace AppointmentSchedulerServer.DAL
         public const string QUERY_FIND_EMPLOYEES_FOR_APPOINTMENT = "SELECT t1.Id, t1.Username, Role, Email, Role, RoomNumber  FROM Accounts t1 INNER JOIN Employees t2 ON t1.Id = t2.Accounts_Id INNER JOIN Employees_Appointments t3 ON t2.Accounts_Id = t3.Accounts_Id WHERE t3.Appointments_Id = @Id";
 
 
-        public const string QUERY_SAVE_APPOINTMENT = "INSERT INTO Appointments(AppointmentTypes_Id, Accounts_Id, Date, TimeSlot, IsApproved) OUTPUT Inserted.Id" +
-        " VALUES (@AppointmentTypeId, @AccountId, @Date, @TimeSlot, @IsApproved)";
+        public const string QUERY_SAVE_APPOINTMENT = "INSERT INTO Appointments(AppointmentTypes_Id, Accounts_Id, Date, TimeSlot, IsApproved, Message) OUTPUT Inserted.Id" +
+        " VALUES (@AppointmentTypeId, @AccountId, @Date, @TimeSlot, @IsApproved, @Message)";
         public const string QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT = "INSERT INTO Employees_Appointments(Appointments_Id, Accounts_Id) VALUES (@AppointmentId, @EmployeeId)";
         public const string QUERY_SELECT_TIMESLOT_BY_DATE = "SELECT TimeSlot FROM Appointments WHERE Date = @Date";
         public const string QUERY_FIND_APPOINTMENT_BY_ID = "SELECT * FROM Appointments WHERE Id = @Id";

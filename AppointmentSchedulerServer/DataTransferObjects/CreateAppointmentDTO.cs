@@ -9,5 +9,6 @@
         public bool IsApproved { get; set; }
         public long AppointmentTypeId { get; set; }
         public IEnumerable<long>? EmployeeIdList { get; set; }
+        public string Message { get; set; } 
     }
 }

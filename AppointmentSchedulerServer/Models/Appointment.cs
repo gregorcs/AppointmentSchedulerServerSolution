@@ -12,6 +12,7 @@ namespace AppointmentSchedulerServer.Models
             TimeSlot = entity.TimeSlot;
             AppointmentTypeId = entity.AppointmentTypeId;
             EmployeeIdList = entity.EmployeeIdList;
+            Message = entity.Message;
         }
 
         public long AccountId { get; set; }
@@ -20,5 +21,6 @@ namespace AppointmentSchedulerServer.Models
         public bool IsApproved { get; set; }
         public long AppointmentTypeId { get; set; }
         public IEnumerable<long> EmployeeIdList { get; set; }
+        public string Message { get; set; }
     }
 }
