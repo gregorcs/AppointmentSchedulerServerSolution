@@ -98,16 +98,15 @@ namespace AppointmentSchedulerServer.DAL.Implementations
         }
 
 
-        /*######################################################################################
-         * ---------------------------------TRANSACTION---------------------------------------
-        ########################################################################################*/
+         // ---------------------------------TRANSACTION---------------------------------------
+
         public async Task<CreateAppointmentDTO> Save([FromBody] CreateAppointmentDTO entity)
         {
             Appointment appointmentToSave = new(entity);
 
             using IDbConnection database = _sqlDbConnection.Connect();
             database.Open();
-            using var transaction = database.BeginTransaction(IsolationLevel.RepeatableRead);
+            using var transaction = database.BeginTransaction(IsolationLevel.Serializable);
             long createdAppointmentId = -1;
             try
             {
