@@ -37,9 +37,9 @@ namespace AppointmentSchedulerServer.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("{id:long}")]
         [Authorize(Roles = EmployeeRole)]
-        public async Task<ActionResult> GetById(int id)
+        public async Task<ActionResult> GetById(long id)
         {
             return await _accountBLL.GetById(id);
         }

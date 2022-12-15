@@ -69,7 +69,7 @@ namespace AppointmentSchedulerServer.BusinessLogicLayer.Implementation
             return new BadRequestObjectResult("There has a problem finding your account");
         }
 
-        public async Task<ActionResult> GetById(int id)
+        public async Task<ActionResult> GetById(long id)
         {
             AccountDTO accountFound = await _accountDAO.FindById(id);
             return accountFound != null ? new OkObjectResult(accountFound) : new NotFoundResult();

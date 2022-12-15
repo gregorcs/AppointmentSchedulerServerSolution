@@ -8,7 +8,7 @@ namespace AppointmentSchedulerServer.BusinessLogicLayer.Interfaces
     {
         public Task<ActionResult<Account>> Save(AccountDTO account);
         public Task<ActionResult> Authenticate(AccountDTO account);
-        public Task<ActionResult> GetById(int id);
+        public Task<ActionResult> GetById(long id);
         public Task<ActionResult> FindAll();
     }
 }
