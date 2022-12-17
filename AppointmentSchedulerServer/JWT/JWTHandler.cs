@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace AppointmentSchedulerServer.JWT
 {
-    public class JWTHandler
+    public static class JWTHandler
     {
         public const string jwtString = "this is the jwt token string";
         public static string CreateUserToken(AccountDTO account)

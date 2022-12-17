@@ -41,7 +41,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
         {
             Account accountToValidate = new(entity);
             using IDbConnection database = _sqlDbConnection.Connect();
-            var accountFound = await database.QueryFirstAsync<Account>(SqlQueries.QUERY_SELECT_BY_EMAIL_AND_PASSWORD, accountToValidate);
+            var accountFound = await database.QueryFirstAsync<Account>(SqlQueries.QUERY_FIND_BY_EMAIL_AND_PASSWORD, accountToValidate);
             if (accountFound != null
                 && BCrypt.Net.BCrypt.EnhancedVerify(entity.Password, accountFound.Password)
                 && entity.Email.Equals(accountFound.Email))
@@ -57,7 +57,7 @@ namespace AppointmentSchedulerServer.DAL.Implementations
         public async Task<IEnumerable<AccountDTO>> FindAll()
         {
             using IDbConnection database = _sqlDbConnection.Connect();
-            return await database.QueryAsync<AccountDTO>(SqlQueries.QUERY_SELECT_EVERYTHING_ACCOUNTS);
+            return await database.QueryAsync<AccountDTO>(SqlQueries.QUERY_FIND_EVERYTHING_ACCOUNTS);
         }
 
         public async Task<IEnumerable<GetEmployeeDTO>> FindAllEmployees()

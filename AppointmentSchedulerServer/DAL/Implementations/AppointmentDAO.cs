@@ -113,8 +113,9 @@ namespace AppointmentSchedulerServer.DAL.Implementations
                 //READ
                 foreach (long EmployeeId in appointmentToSave.EmployeeIdList)
                 {
-                    int amount = await database.QueryFirstAsync<int>(SqlQueries.QUERY_COUNT_APPOINTMENTS_FOR_EMPLOYEE_TIME_AND_DATE, new { Id = EmployeeId, Date = appointmentToSave.Date, TimeSlot = appointmentToSave.TimeSlot }, transaction);
-                    Thread.Sleep(2000);
+                    int amount = await database.QueryFirstAsync<int>(SqlQueries.QUERY_COUNT_APPOINTMENTS_FOR_EMPLOYEE_TIME_AND_DATE, 
+                                                                        new { Id = EmployeeId, Date = appointmentToSave.Date, 
+                                                                              TimeSlot = appointmentToSave.TimeSlot }, transaction);
                     if (amount > 0)
                     {
                         throw new DatabaseInsertionException(DALExceptionMessages.EmployeeUnavailable);
@@ -126,7 +127,8 @@ namespace AppointmentSchedulerServer.DAL.Implementations
 
                 foreach(long EmployeeId in appointmentToSave.EmployeeIdList)
                 {
-                    await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT, new { employeeId = EmployeeId, appointmentId = createdAppointmentId }, transaction);
+                    await database.ExecuteScalarAsync(SqlQueries.QUERY_SAVE_EMPLOYEE_JOIN_APPOINTMENT, 
+                                                        new { employeeId = EmployeeId, appointmentId = createdAppointmentId }, transaction);
                 }
 
                 transaction.Commit();
