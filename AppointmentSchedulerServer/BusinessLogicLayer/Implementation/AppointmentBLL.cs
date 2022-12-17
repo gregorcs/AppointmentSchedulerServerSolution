@@ -18,14 +18,15 @@ namespace AppointmentSchedulerServer.BusinessLogicLayer.Implementation
             _employeeDAO = employeeDAO;
         }
 
-        public async Task<ActionResult<IEnumerable<Appointment>>> FindAllByAccountIdAsync(int id)
+        public async Task<ActionResult<IEnumerable<Appointment>>> FindAllByAccountIdAsync(long id)
         {
             var result = await _appointmentDAO.FindAllByAccountId(id);
             return result == null
                 ? new BadRequestObjectResult(ControllerErrorMessages.AppointmentError)
                 : new OkObjectResult(result);
         }
-        public async Task<ActionResult<IEnumerable<Appointment>>> FindAllByEmployeeIdAsync(int id)
+
+        public async Task<ActionResult<IEnumerable<Appointment>>> FindAllByEmployeeIdAsync(long id)
         {
             var result = await _appointmentDAO.FindAllByEmployeeId(id);
             return result == null

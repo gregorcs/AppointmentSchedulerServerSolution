@@ -36,7 +36,8 @@ namespace AppointmentSchedulerServer.Controllers
 
         //todo figure out how to get appointment, employee, account into controller -> repository
         [HttpPost]
-        [Authorize(Roles = UserAndEmployeeRoles)]
+        [AllowAnonymous]
+        //[Authorize(Roles = UserAndEmployeeRoles)]
         public async Task<IActionResult> Post([FromBody] CreateAppointmentDTO appointmentDTO)
         {
             return await _appointmentBLL.Save(appointmentDTO);

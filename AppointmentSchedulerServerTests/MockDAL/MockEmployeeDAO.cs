@@ -2,11 +2,13 @@
 using AppointmentSchedulerServer.DataTransferObjects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace AppointmentSchedulerServerTests.Controller_Tests
+namespace AppointmentSchedulerServerTests.MockDAL
 {
-    internal class MockEmployeeDAO : IEmployeeDAO
+    public class MockEmployeeDAO : IEmployeeDAO
     {
         public Task Delete(EmployeeDTO entity)
         {
@@ -44,6 +46,11 @@ namespace AppointmentSchedulerServerTests.Controller_Tests
         }
 
         public Task<EmployeeDTO> FindById(long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<GetEmployeeDTO>> GetEmployeeByAppointmentType(long id)
         {
             throw new NotImplementedException();
         }

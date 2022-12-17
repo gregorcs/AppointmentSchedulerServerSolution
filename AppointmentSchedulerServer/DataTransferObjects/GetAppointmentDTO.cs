@@ -4,7 +4,7 @@ namespace AppointmentSchedulerServer.DataTransferObjects
 {
     public class GetAppointmentDTO
     {
-        public long Id { get; set; }
+        public long? Id { get; set; }
         public DateTime Date { get; set; }
         public int TimeSlot { get; set; }
         public bool IsApproved { get; set; }
@@ -27,6 +27,14 @@ namespace AppointmentSchedulerServer.DataTransferObjects
             IsApproved = isApproved;
             Name = name;
             Description = description;
+        }
+
+        public GetAppointmentDTO(CreateAppointmentDTO entity)
+        {
+            Id = entity.Id;
+            Date = entity.Date;
+            TimeSlot = entity.TimeSlot;
+            IsApproved = entity.IsApproved;
         }
     }
 }
