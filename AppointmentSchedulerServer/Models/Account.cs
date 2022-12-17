@@ -1,4 +1,4 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+﻿using AppointmentSchedulerServer.DataTransferObjects;
 
 namespace AppointmentSchedulerServer.Models
 {
@@ -11,24 +11,27 @@ namespace AppointmentSchedulerServer.Models
             Email = account.Email;
             Password = account.Password;
             Username = account.Username;
+            Appointments = account.Appointments;
         }
         public Account(long pk_AccountId, string username, string password, string email)
         {
-            PK_AccountId = pk_AccountId;
+            Id = pk_AccountId;
             Username = username;
             Password = password;
             Email = email;
         }
-        public Account(string username, string password, string email)
+        public Account(string username, string password, string email, IEnumerable<int> appointments)
         {
             Username = username;
             Password = password;
             Email = email;
+            Appointments = appointments;
         }
 
-        public long PK_AccountId { get; set; }
+        public long Id { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
+        public IEnumerable<int> Appointments { get; set; }
     }
 }

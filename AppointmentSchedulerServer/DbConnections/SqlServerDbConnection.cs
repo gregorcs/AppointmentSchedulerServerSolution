@@ -3,10 +3,10 @@ using System.Data;
 
 namespace AppointmentSchedulerServer.DbConnections
 {
-    public class SqlServerDbConnectionFactory : ISqlServerDbConnectionFactory
+    public class SqlServerDbConnection : ISqlServerDbConnection
     {
         private readonly string _connectionString;
-        public SqlServerDbConnectionFactory(string connectionString)
+        public SqlServerDbConnection(string connectionString)
         {
             _connectionString = connectionString;
         }

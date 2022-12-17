@@ -1,7 +1,7 @@
 ﻿using AppointmentSchedulerServer.Controllers;
+using AppointmentSchedulerServer.DAL.Interfaces;
+using AppointmentSchedulerServer.DataTransferObjects;
 using NUnit.Framework;
-using AppointmentSchedulerServer.Repositories;
-using AppointmentSchedulerServer.Data_Transfer_Objects;
 
 namespace AppointmentSchedulerServerTests.Controller_Tests
 {
@@ -14,23 +14,23 @@ namespace AppointmentSchedulerServerTests.Controller_Tests
 
         }
         [Test]
-        public async void AccountDtoShouldSave() 
+        public async void AccountDtoShouldSave()
         {
             //arrange
 
             AccountDTO AccountToSave = new AccountDTO("test", "abc@gmail.com", "abcd1234");
 
-            IEmployeeRepository MockEmployeeRepository = new MockEmployeeRepository();
+            IEmployeeDAO MockEmployeeDAO = new MockEmployeeDAO();
 
-            IAccountRepository MockAccountRepository = new MockAccountRepository();
-            var AccountController = new AccountController(MockAccountRepository, MockEmployeeRepository);
+            IAccountDAO MockAccountDAO = new MockAccountDAO();
+            var AccountController = new AccountController(MockAccountDAO, MockEmployeeDAO);
 
             //act
             AccountController.Post(AccountToSave);
 
             //assert
 
-            MockAccountRepository.ValidateAccountByEmailAndPassword(AccountToSave);
+            MockAccountDAO.ValidateAccountByEmailAndPassword(AccountToSave);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace AppointmentSchedulerServer.DbConnections
 {
-    public interface ISqlServerDbConnectionFactory
+    public interface ISqlServerDbConnection
     {
         object ConnectionString { get; }
 

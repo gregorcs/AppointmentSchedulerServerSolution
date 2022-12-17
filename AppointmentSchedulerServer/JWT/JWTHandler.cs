@@ -1,11 +1,11 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
+﻿using AppointmentSchedulerServer.DataTransferObjects;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace AppointmentSchedulerServerTests.JWT
+namespace AppointmentSchedulerServer.JWT
 {
-    public class JWTHandler
+    public static class JWTHandler
     {
         public const string jwtString = "this is the jwt token string";
         public static string CreateUserToken(AccountDTO account)

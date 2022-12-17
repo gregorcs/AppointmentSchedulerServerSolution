@@ -1,5 +1,4 @@
-﻿using AppointmentSchedulerServer.Data_Transfer_Objects;
-using AppointmentSchedulerServer.Models;
+﻿using AppointmentSchedulerServer.DataTransferObjects;
 
 namespace AppointmentSchedulerServer.Models
 {
@@ -16,7 +15,7 @@ namespace AppointmentSchedulerServer.Models
         }
 
         public Employee(EmployeeDTO employeeDTO)
-            : base(employeeDTO.Username, employeeDTO.Password, employeeDTO.Email)
+            : base(employeeDTO.Username, employeeDTO.Password, employeeDTO.Email, employeeDTO.Appointments)
         {
             Role = employeeDTO.Role;
             RoomNumber = employeeDTO.RoomNumber;
